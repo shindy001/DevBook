@@ -1,0 +1,91 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "build",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/src/DevBook.Server/DevBook.Server.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "publish",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"publish",
+				"${workspaceFolder}/src/DevBook.Server/DevBook.Server.csproj",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "watch",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"watch",
+				"run",
+				"--project",
+				"${workspaceFolder}/src/DevBook.Server/DevBook.Server.csproj"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "start",
+			"command": "dotnet",
+			"type": "shell",
+			"isBackground": true,
+			"args": [
+				"run",
+				"--project",
+				"${workspaceFolder}/src/DevBook.Server/DevBook.Server.csproj"
+			],
+			"problemMatcher": [
+				{
+				  "pattern": [
+					{
+					  "regexp": ".",
+					  "file": 1,
+					  "location": 2,
+					  "message": 3
+					}
+				  ],
+				  "background": {
+					"activeOnStart": true,
+					"beginsPattern": ".",
+					"endsPattern": ".",
+				  }
+				}
+			]
+		},
+		{
+			"label": "start server",
+			"dependsOn": ["start"]
+		},
+		{
+			"label": "build and start server",
+			"dependsOn": ["build", "start"]
+		},
+		{
+			"label": "terminate server",
+			"command": "echo ${input:terminate server}",
+			"type": "shell",
+			"problemMatcher": []
+		}
+	],
+	"inputs": [
+		{
+		  "id": "terminate server",
+		  "type": "command",
+		  "command": "workbench.action.tasks.terminate",
+		  "args": "start"
+		}
+	  ]
+}
