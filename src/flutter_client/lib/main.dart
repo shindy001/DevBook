@@ -18,4 +18,14 @@ void main() async {
       child: const App(),
     ),
   );
+
+  doWhenWindowReady(() {
+    final win = appWindow;
+    const initialSize = Size(800, 600);
+    win.minSize = initialSize;
+    win.size = initialSize;
+    win.alignment = Alignment.center;
+    win.title = "DevBook";
+    win.show();
+  });
 }
