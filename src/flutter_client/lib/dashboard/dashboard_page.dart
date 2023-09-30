@@ -1,48 +1,21 @@
 import 'package:flutter/material.dart';
-
-import '../settings/settings_controller.dart';
+import 'package:flutter_client/ui/widgets/page_with_navigation.dart';
 
 class Dashboard extends StatelessWidget {
-  const Dashboard({
-    super.key,
-    required this.title,
-    required this.settings,
-  });
+  const Dashboard({super.key});
 
-  final String title;
-  final Settings settings;
+  factory Dashboard.routeBuilder(_, __) {
+    return const Dashboard(
+      key: Key('dashboard'),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const Text(
-            'Hello',
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: DropdownButton<ThemeMode>(
-              value: settings.themeMode,
-              onChanged: settings.updateThemeMode,
-              items: const [
-                DropdownMenuItem(
-                  value: ThemeMode.system,
-                  child: Text('System Theme'),
-                ),
-                DropdownMenuItem(
-                  value: ThemeMode.light,
-                  child: Text('Light Theme'),
-                ),
-                DropdownMenuItem(
-                  value: ThemeMode.dark,
-                  child: Text('Dark Theme'),
-                )
-              ],
-            ),
-          ),
-        ],
+    return const PageWithNavigation(
+      activeSideMenuItemName: 'Dashboard',
+      child: Text(
+        'Hello Dashboard',
       ),
     );
   }

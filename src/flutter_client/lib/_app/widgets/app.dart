@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_client/_app/router.dart';
+import 'package:flutter_client/ui/theme/theme.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../dashboard/dashboard_page.dart';
 import '../../settings/settings_controller.dart';
 import '../app_provider.dart';
 import 'title_bar.dart';
 
 class App extends StatelessWidget {
-  const App({super.key});
+  const App({super.key, this.router});
+
+  final GoRouter? router;
 
   @override
   Widget build(BuildContext context) {
@@ -14,22 +18,15 @@ class App extends StatelessWidget {
     return ListenableBuilder(
       listenable: settings,
       builder: (context, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
+        return MaterialApp.router(
           title: 'DevBook',
-          theme: ThemeData.light(useMaterial3: true),
-          darkTheme: ThemeData.dark(useMaterial3: true),
-          themeMode: settings.themeMode,
-          home: Scaffold(
-            body: Column(
-              children: [
-                const TitleBar(),
-                Dashboard(
-                  title: 'Flutter Demo Home Page',
-                  settings: settings,
-                ),
-              ],
-            ),
+          debugShowCheckedModeBanner: false,
+          theme: DevBookTheme.themeDataLight,
+          darkTheme: DevBookTheme.themeDataDark,
+          routerConfig: router ?? createRouter(),
+          builder: (context, child) => Scaffold(
+            appBar: const TitleBar(),
+            body: child,
           ),
         );
       },
