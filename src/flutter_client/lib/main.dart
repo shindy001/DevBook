@@ -1,5 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_client/ui/layout/sizes.dart';
 
 import '_app/app_provider.dart';
 import '_app/widgets/app.dart';
@@ -20,12 +21,11 @@ void main() async {
   );
 
   doWhenWindowReady(() {
-    final win = appWindow;
-    const initialSize = Size(800, 600);
-    win.minSize = initialSize;
-    win.size = initialSize;
-    win.alignment = Alignment.center;
-    win.title = "DevBook";
-    win.show();
+    final window = appWindow;
+    window.minSize = DevBookSizes.minWindowSize;
+    window.size = DevBookSizes.startWindowSize;
+    window.alignment = Alignment.center;
+    window.title = "DevBook";
+    window.show();
   });
 }

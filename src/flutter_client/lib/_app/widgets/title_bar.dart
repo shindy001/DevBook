@@ -1,13 +1,15 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 
-class TitleBar extends StatelessWidget {
+import '../../ui/layout/sizes.dart';
+
+class TitleBar extends StatelessWidget implements PreferredSizeWidget {
   const TitleBar({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 36,
+      height: DevBookSizes.titleBarHeight,
       color: Theme.of(context).primaryColor,
       child: Row(
         children: [
@@ -21,4 +23,7 @@ class TitleBar extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(DevBookSizes.titleBarHeight);
 }
