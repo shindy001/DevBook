@@ -1,26 +1,43 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_client/ui/theme/dev_book_colors.dart';
 
-import '../../ui/layout/sizes.dart';
+import '../../ui/layout/layout.dart';
 
 class TitleBar extends StatelessWidget implements PreferredSizeWidget {
   const TitleBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: DevBookSizes.titleBarHeight,
-      color: Theme.of(context).primaryColor,
-      child: Row(
-        children: [
-          Expanded(child: MoveWindow()),
-          Row(children: [
-            MinimizeWindowButton(colors: WindowButtonColors(iconNormal: Colors.white)),
-            MaximizeWindowButton(colors: WindowButtonColors(iconNormal: Colors.white)),
-            CloseWindowButton(colors: WindowButtonColors(iconNormal: Colors.white, mouseOver: const Color(0xFFD32F2F), mouseDown: const Color(0xFFB71C1C))),
-          ]),
-        ],
-      ),
+    final compactMenu = MediaQuery.of(context).size.width < DevBookBreakpoints.small;
+    return Row(
+      children: [
+        Container(
+          color: DevBookColors.backgroundDark,
+          width: compactMenu ? DevBookSizes.compactMenuWidth : DevBookSizes.standardMenuWidth,
+        ),
+        Expanded(
+            child: Container(
+          color: DevBookColors.backgroundMedium,
+          height: DevBookSizes.titleBarHeight,
+          child: Row(
+            children: [
+              Expanded(child: MoveWindow()),
+              Row(children: [
+                MinimizeWindowButton(colors: WindowButtonColors(iconNormal: DevBookColors.white)),
+                MaximizeWindowButton(colors: WindowButtonColors(iconNormal: DevBookColors.white)),
+                CloseWindowButton(
+                  colors: WindowButtonColors(
+                    iconNormal: DevBookColors.white,
+                    mouseOver: DevBookColors.closeWindowButtonMouseOver,
+                    mouseDown: DevBookColors.closeWindowButtonMouseDown,
+                  ),
+                ),
+              ]),
+            ],
+          ),
+        )),
+      ],
     );
   }
 

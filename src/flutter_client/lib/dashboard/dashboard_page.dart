@@ -14,9 +14,7 @@ class Dashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return const PageWithNavigation(
       activeSideMenuItemName: 'Dashboard',
-      child: Text(
-        'Hello Dashboard',
-      ),
+      child: Text('Hello Dashboard'),
     );
   }
 }

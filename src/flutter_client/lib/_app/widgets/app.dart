@@ -21,7 +21,6 @@ class App extends StatelessWidget {
         return MaterialApp.router(
           title: 'DevBook',
           debugShowCheckedModeBanner: false,
-          theme: DevBookTheme.themeDataLight,
           darkTheme: DevBookTheme.themeDataDark,
           routerConfig: router ?? createRouter(),
           builder: (context, child) => Scaffold(

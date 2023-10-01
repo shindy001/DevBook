@@ -6,6 +6,8 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quiver/strings.dart';
 
+import '../theme/dev_book_colors.dart';
+
 class SideMenu extends StatelessWidget {
   const SideMenu({
     super.key,
@@ -18,7 +20,8 @@ class SideMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      color: DevBookColors.backgroundDark,
       width: expanded ? DevBookSizes.standardMenuWidth : DevBookSizes.compactMenuWidth,
       height: double.infinity,
       child: ListView(
@@ -83,13 +86,12 @@ class SideMenuItem extends StatelessWidget {
       minVerticalPadding: 0,
       contentPadding: EdgeInsets.zero,
       selected: isSelected,
-      selectedColor: Colors.purple,
       title: Row(
         children: [
           Opacity(
             opacity: isSelected ? 1.0 : 0,
             child: Container(
-              color: Colors.purple,
+              color: ListTileTheme.of(context).selectedColor,
               width: DevBookSizes.sideMenuActiveItemMarkerWidth,
               height: DevBookSizes.sideMenuItemHeight,
             ),

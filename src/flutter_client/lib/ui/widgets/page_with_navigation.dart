@@ -31,9 +31,7 @@ class PageWithNavigation extends StatelessWidget {
           activeItem: activeSideMenuItemName,
           expanded: expandedSideMenu,
         ),
-        Expanded(
-          child: child,
-        )
+        child,
       ],
     );
   }
