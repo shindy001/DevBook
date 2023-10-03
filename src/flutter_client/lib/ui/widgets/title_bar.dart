@@ -2,7 +2,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/ui/theme/dev_book_colors.dart';
 
-import '../../ui/layout/layout.dart';
+import '../layout/layout.dart';
 
 class TitleBar extends StatelessWidget implements PreferredSizeWidget {
   const TitleBar({super.key});

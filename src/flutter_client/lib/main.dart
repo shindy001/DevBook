@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_client/ui/layout/sizes.dart';
 
 import '_app/app_provider.dart';
-import '_app/widgets/app.dart';
+import '_app/app.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_service.dart';
 
