@@ -40,21 +40,21 @@ class SideMenu extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: DevBookSpacing.sm),
             child: SideMenuItem(
-              itemName: 'PlaceholderItem1',
+              itemName: 'App Setups',
               activeItem: activeItem,
-              icon: Icons.dashboard_rounded,
+              icon: Icons.app_registration_rounded,
               showLabel: expanded,
-              onTap: () => {},
+              onTap: () => context.go(AppRoutes.appSetups),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: DevBookSpacing.sm),
             child: SideMenuItem(
-              itemName: 'PlaceholderItem2',
+              itemName: 'Startup Profiles',
               activeItem: activeItem,
-              icon: Icons.dashboard_rounded,
+              icon: Icons.developer_board,
               showLabel: expanded,
-              onTap: () => {},
+              onTap: () => context.go(AppRoutes.startupProfiles),
             ),
           ),
         ],

@@ -1,5 +1,7 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_client/repositories/app_setups/app_setups_repository.dart';
+import 'package:flutter_client/repositories/startup_profiles/startup_profiles_repository.dart';
 import 'package:flutter_client/ui/layout/sizes.dart';
 
 import '_app/app_provider.dart';
@@ -15,6 +17,8 @@ void main() async {
     AppProvider(
       services: [
         settingsController,
+        AppSetupsRepository(),
+        StartupProfilesRepository(),
       ],
       child: const App(),
     ),

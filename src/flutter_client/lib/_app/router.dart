@@ -1,10 +1,14 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_client/app_setups/app_setups_page.dart';
 import 'package:flutter_client/dashboard/dashboard_page.dart';
+import 'package:flutter_client/startup_profiles/startup_profiles_page.dart';
 import 'package:go_router/go_router.dart';
 
 abstract class AppRoutes {
   static const home = '/';
   static const dashboard = '/dashboard';
+  static const appSetups = '/appSetups';
+  static const startupProfiles = '/startupProfiles';
 }
 
 GoRouter createRouter() {
@@ -13,13 +17,25 @@ GoRouter createRouter() {
       GoRoute(
         path: AppRoutes.home,
         pageBuilder: (context, state) => NoTransitionPage(
-          child: Dashboard.routeBuilder(context, state),
+          child: DashboardPage.routeBuilder(context, state),
         ),
       ),
       GoRoute(
         path: AppRoutes.dashboard,
         pageBuilder: (context, state) => NoTransitionPage(
-          child: Dashboard.routeBuilder(context, state),
+          child: DashboardPage.routeBuilder(context, state),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.appSetups,
+        pageBuilder: (context, state) => NoTransitionPage(
+          child: AppSetupsPage.routeBuilder(context, state),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.startupProfiles,
+        pageBuilder: (context, state) => NoTransitionPage(
+          child: StartupProfilesPage.routeBuilder(context, state),
         ),
       ),
     ],
