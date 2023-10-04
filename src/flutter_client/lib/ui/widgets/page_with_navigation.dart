@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_client/ui/theme/dev_book_spacing.dart';
 import 'package:flutter_client/ui/widgets/responsive_layout.dart';
 import 'package:flutter_client/ui/widgets/sidemenu.dart';
 
@@ -26,12 +27,18 @@ class PageWithNavigation extends StatelessWidget {
 
   Widget _pageViewComposition({required bool expandedSideMenu, required String activeSideMenuItemName, required Widget child}) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SideMenu(
           activeItem: activeSideMenuItemName,
           expanded: expandedSideMenu,
         ),
-        child,
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(DevBookSpacing.md),
+            child: child,
+          ),
+        ),
       ],
     );
   }

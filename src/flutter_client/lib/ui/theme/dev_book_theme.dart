@@ -17,6 +17,7 @@ class DevBookTheme {
       listTileTheme: _listTileTheme,
       dialogTheme: _dialogTheme,
       bottomNavigationBarTheme: _bottomNavigationBarTheme,
+      cardTheme: _cardTheme,
     );
   }
 
@@ -48,7 +49,13 @@ class DevBookTheme {
 
   static BottomNavigationBarThemeData get _bottomNavigationBarTheme {
     return const BottomNavigationBarThemeData(
-      backgroundColor: Colors.transparent,
+      backgroundColor: DevBookColors.transparent,
+    );
+  }
+
+  static CardTheme get _cardTheme {
+    return const CardTheme(
+      color: DevBookColors.backgroundLight,
     );
   }
 }

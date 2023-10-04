@@ -7,7 +7,7 @@ class AppProvider extends InheritedWidget {
 
   static T of<T>(BuildContext context) {
     final AppProvider? result = context.dependOnInheritedWidgetOfExactType<AppProvider>();
-    assert(result != null, 'No Settings found in context');
+    assert(result != null, 'No AppProvider found in context');
     final service = result?.services?.whereType<T>().first;
     assert(service != null, "No Service '$service' found in context");
     return service!;
