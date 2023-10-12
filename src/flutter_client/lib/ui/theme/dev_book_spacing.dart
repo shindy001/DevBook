@@ -32,4 +32,10 @@ abstract class DevBookSpacing {
 
   /// xxxlg pacing value (64pt)
   static const double xxxlg = 4 * _spaceUnit;
+
+  /// xxxlg pacing value (80pt)
+  static const double mega = 5 * _spaceUnit;
+
+  /// xxxlg pacing value (96pt)
+  static const double giga = 6 * _spaceUnit;
 }

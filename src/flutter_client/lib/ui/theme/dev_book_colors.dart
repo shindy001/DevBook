@@ -5,17 +5,8 @@ abstract class DevBookColors {
   /// Color: 0xff8870e6
   static const Color seedPurple = Color(0xff8870e6);
 
-  /// Color: 0xff232247
-  static const Color backgroundDark = Color(0xff232247);
-
-  /// Color: 0xff2e2c53
-  static const Color backgroundMedium = Color(0xff2e2c53);
-
-  /// Color: 0xff393761
-  static const Color backgroundLight = Color(0xff393761);
-
-  /// Color: 0xff47456d
-  static const Color backgroundUltraLight = Color(0xff47456d);
+  /// Color: 0xff242b3e
+  static const Color background = Color(0xff242b3e);
 
   /// Color: 0xffffffff
   static const Color white = Color(0xffffffff);
@@ -40,4 +31,7 @@ abstract class DevBookColors {
 
   /// Close: 0xffb71c1c
   static const Color closeWindowButtonMouseDown = Color(0xffb71c1c);
+
+  /// Color: 0xff464b5b
+  static const Color activeMenuItemBackground = Color(0xff464b5b);
 }

@@ -21,41 +21,32 @@ class SideMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: DevBookColors.backgroundDark,
+      color: DevBookColors.background,
       width: expanded ? DevBookSizes.standardMenuWidth : DevBookSizes.compactMenuWidth,
       height: double.infinity,
       child: ListView(
         children: [
-          const Gap(DevBookSpacing.xxxlg),
-          Padding(
-            padding: const EdgeInsets.only(top: DevBookSpacing.sm),
-            child: SideMenuItem(
-              itemName: 'Dashboard',
-              activeItem: activeItem,
-              icon: Icons.dashboard_rounded,
-              showLabel: expanded,
-              onTap: () => context.go(AppRoutes.dashboard),
-            ),
+          const Gap(DevBookSpacing.giga),
+          SideMenuItem(
+            itemName: 'Dashboard',
+            activeItem: activeItem,
+            icon: Icons.dashboard_rounded,
+            showLabel: expanded,
+            onTap: () => context.go(AppRoutes.dashboard),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: DevBookSpacing.sm),
-            child: SideMenuItem(
-              itemName: 'App Setups',
-              activeItem: activeItem,
-              icon: Icons.app_registration_rounded,
-              showLabel: expanded,
-              onTap: () => context.go(AppRoutes.appSetups),
-            ),
+          SideMenuItem(
+            itemName: 'App Setups',
+            activeItem: activeItem,
+            icon: Icons.app_registration_rounded,
+            showLabel: expanded,
+            onTap: () => context.go(AppRoutes.appSetups),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: DevBookSpacing.sm),
-            child: SideMenuItem(
-              itemName: 'Startup Profiles',
-              activeItem: activeItem,
-              icon: Icons.developer_board,
-              showLabel: expanded,
-              onTap: () => context.go(AppRoutes.startupProfiles),
-            ),
+          SideMenuItem(
+            itemName: 'Startup Profiles',
+            activeItem: activeItem,
+            icon: Icons.developer_board,
+            showLabel: expanded,
+            onTap: () => context.go(AppRoutes.startupProfiles),
           ),
         ],
       ),
@@ -82,34 +73,35 @@ class SideMenuItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isSelected = equalsIgnoreCase(itemName, activeItem);
-    return ListTile(
-      minVerticalPadding: 0,
-      contentPadding: EdgeInsets.zero,
-      selected: isSelected,
-      title: Row(
-        children: [
-          Opacity(
-            opacity: isSelected ? 1.0 : 0,
-            child: Container(
-              color: ListTileTheme.of(context).selectedColor,
-              width: DevBookSizes.sideMenuActiveItemMarkerWidth,
-              height: DevBookSizes.sideMenuItemHeight,
-            ),
+    return Container(
+      margin: const EdgeInsets.all(DevBookSpacing.sm),
+      child: Material(
+        type: MaterialType.transparency,
+        child: ListTile(
+          selectedTileColor: DevBookColors.activeMenuItemBackground,
+          splashColor: DevBookColors.transparent,
+          selected: isSelected,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(DevBookSpacing.sm),
           ),
-          const Gap(DevBookSpacing.md),
-          Icon(icon),
-          const Gap(DevBookSpacing.md),
-          if (showLabel)
-            Padding(
-              padding: const EdgeInsets.only(bottom: DevBookSpacing.xs),
-              child: Text(
-                itemName,
-                style: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-            )
-        ],
+          contentPadding: const EdgeInsets.symmetric(horizontal: DevBookSpacing.sm),
+          title: Row(
+            children: [
+              Icon(icon),
+              const Gap(DevBookSpacing.md),
+              if (showLabel)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: DevBookSpacing.xs),
+                  child: Text(
+                    itemName,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                )
+            ],
+          ),
+          onTap: onTap,
+        ),
       ),
-      onTap: onTap,
     );
   }
 }

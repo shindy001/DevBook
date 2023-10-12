@@ -9,16 +9,11 @@ class TitleBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final compactMenu = MediaQuery.of(context).size.width < DevBookBreakpoints.small;
     return Row(
       children: [
-        Container(
-          color: DevBookColors.backgroundDark,
-          width: compactMenu ? DevBookSizes.compactMenuWidth : DevBookSizes.standardMenuWidth,
-        ),
         Expanded(
             child: Container(
-          color: DevBookColors.backgroundMedium,
+          color: DevBookColors.background,
           height: DevBookSizes.titleBarHeight,
           child: Row(
             children: [

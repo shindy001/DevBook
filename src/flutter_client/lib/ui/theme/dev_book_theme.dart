@@ -6,9 +6,8 @@ import 'dev_book_text_styles.dart';
 class DevBookTheme {
   static ThemeData get themeDataDark {
     return ThemeData.dark().copyWith(
-      useMaterial3: true,
       colorScheme: _colorScheme,
-      scaffoldBackgroundColor: DevBookColors.backgroundMedium,
+      scaffoldBackgroundColor: DevBookColors.background,
       textTheme: _textTheme.apply(
         bodyColor: DevBookColors.white,
         displayColor: DevBookColors.white,
@@ -24,7 +23,7 @@ class DevBookTheme {
   static ColorScheme get _colorScheme {
     return ColorScheme.fromSeed(
       seedColor: DevBookColors.seedPurple,
-      background: DevBookColors.backgroundMedium,
+      background: DevBookColors.background,
     );
   }
 
@@ -36,7 +35,7 @@ class DevBookTheme {
     return const ListTileThemeData(
       textColor: DevBookColors.grey,
       iconColor: DevBookColors.grey,
-      selectedColor: DevBookColors.seedPurple,
+      selectedColor: DevBookColors.white,
     );
   }
 
@@ -55,7 +54,7 @@ class DevBookTheme {
 
   static CardTheme get _cardTheme {
     return const CardTheme(
-      color: DevBookColors.backgroundLight,
+      color: DevBookColors.background,
     );
   }
 }
