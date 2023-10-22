@@ -1,9 +1,26 @@
 ﻿@page "/appsetups"
 
+@using MauiBlazorClient.Services.DTO;
+
 <MudCard class="ma-4">
 	<MudCardHeader>
 		<CardHeaderContent>
 			<MudText Typo="Typo.h5">App Setups</MudText>
 		</CardHeaderContent>
 	</MudCardHeader>
+	<MudCardContent>
+		<MudTable Items="@_appSetups" Hover="true" Breakpoint="Breakpoint.Lg" Loading="@_loading"
+			LoadingProgressColor="Color.Info">
+			<HeaderContent>
+				<MudTh>Name</MudTh>
+				<MudTh>Path</MudTh>
+				<MudTh>Arguments</MudTh>
+			</HeaderContent>
+			<RowTemplate>
+				<MudTd DataLabel="Name">@context.Name</MudTd>
+				<MudTd DataLabel="Path">@context.Path</MudTd>
+				<MudTd DataLabel="Arguments">@context.Arguments</MudTd>
+			</RowTemplate>
+		</MudTable>
+	</MudCardContent>
 </MudCard>

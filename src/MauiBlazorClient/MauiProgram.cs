@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using MauiBlazorClient.Services;
+using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 using Microsoft.Maui.Platform;
 using MudBlazor.Services;
@@ -52,7 +53,14 @@ namespace MauiBlazorClient
 			});
 #endif
 
+			RegisterServices(builder.Services);
+
 			return builder.Build();
+		}
+
+		private static void RegisterServices(IServiceCollection services)
+		{
+			services.AddSingleton<IAppSetupsService>(new AppSetupsService());
 		}
 	}
 }
