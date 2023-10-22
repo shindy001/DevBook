@@ -27,7 +27,7 @@
 @code {
     private bool _drawerOpen = true;
     private bool _isDarkMode;
-    private MudThemeProvider _mudThemeProvider;
+    private MudThemeProvider _mudThemeProvider = default!;
     private Color _toggleThemeButtonColor => _isDarkMode ? Color.Inherit : Color.Inherit;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

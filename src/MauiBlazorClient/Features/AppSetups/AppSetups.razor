@@ -1,7 +1,5 @@
 ﻿@page "/appsetups"
 
-@using MauiBlazorClient.Services.DTO;
-
 <MudCard class="ma-4">
 	<MudCardHeader>
 		<CardHeaderContent>
@@ -9,7 +7,7 @@
 		</CardHeaderContent>
 	</MudCardHeader>
 	<MudCardContent>
-		<MudTable Items="@_appSetups" Hover="true" Breakpoint="Breakpoint.Lg" Loading="@_loading"
+		<MudTable Items="@_model.AppSetups" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading"
 			LoadingProgressColor="Color.Info">
 			<HeaderContent>
 				<MudTh>Name</MudTh>
