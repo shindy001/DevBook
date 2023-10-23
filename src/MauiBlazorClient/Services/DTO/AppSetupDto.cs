@@ -1,6 +1,6 @@
 namespace MauiBlazorClient.Services.DTO
 {
-	public record AppSetupDto
+	public sealed record AppSetupDto
 	{
 		public required string Id { get; set; }
 		public required string Name { get; set; }

@@ -10,11 +10,13 @@
 		<MudTable Items="@_model.AppSetups" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading"
 			LoadingProgressColor="Color.Info">
 			<HeaderContent>
+				<MudTh>#</MudTh>
 				<MudTh>Name</MudTh>
 				<MudTh>Path</MudTh>
 				<MudTh>Arguments</MudTh>
 			</HeaderContent>
 			<RowTemplate>
+				<MudTd>@(_model.AppSetups.IndexOf(context)+1)</MudTd>
 				<MudTd DataLabel="Name">@context.Name</MudTd>
 				<MudTd DataLabel="Path">@context.Path</MudTd>
 				<MudTd DataLabel="Arguments">@context.Arguments</MudTd>

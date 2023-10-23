@@ -9,17 +9,18 @@ namespace MauiBlazorClient.Features.AppSetups
 		[Inject] private IMediator Mediator { get; set; } = default!;
 
 		private Model _model = new();
-		private bool _loading = true;
+		private bool _loading;
 
 		protected override async Task OnInitializedAsync()
 		{
+			_loading = true;
 			_model = await Mediator.Send(new Query());
 			_loading = false;
 		}
 
-		public class Query() : IRequest<Model> { }
+		public class Query : IRequest<Model> { }
 
-		public class Model()
+		public class Model
 		{
 			public List<AppSetup> AppSetups { get; set; } = [];
 
