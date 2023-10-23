@@ -61,7 +61,8 @@ namespace MauiBlazorClient
 		private static void RegisterServices(IServiceCollection services)
 		{
 			services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(MauiProgram).Assembly));
-			services.AddSingleton<IAppSetupsService>(new AppSetupsService());
+			services.AddSingleton<IAppSetupsService, AppSetupsService>();
+			services.AddSingleton<IStartupProfilesService, StartupProfilesService>();
 		}
 	}
 }

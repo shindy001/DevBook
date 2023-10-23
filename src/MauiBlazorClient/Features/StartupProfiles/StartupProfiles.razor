@@ -1,0 +1,24 @@
+﻿@page "/startupprofiles"
+
+<MudCard class="ma-4">
+	<MudCardHeader>
+		<CardHeaderContent>
+			<MudText Typo="Typo.h5">Startup Profiles</MudText>
+		</CardHeaderContent>
+	</MudCardHeader>
+	<MudCardContent>
+		<MudTable Items="@_model.StartupProfiles" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading"
+			LoadingProgressColor="Color.Info">
+			<HeaderContent>
+				<MudTh>#</MudTh>
+				<MudTh>Name</MudTh>
+				<MudTh>AppSetups</MudTh>
+			</HeaderContent>
+			<RowTemplate>
+				<MudTd>@(_model.StartupProfiles.IndexOf(context)+1)</MudTd>
+				<MudTd DataLabel="Name">@context.Name</MudTd>
+				<MudTd DataLabel="AppSetups">@string.Join(", ", context.AppSetupNames)</MudTd>
+			</RowTemplate>
+		</MudTable>
+	</MudCardContent>
+</MudCard>

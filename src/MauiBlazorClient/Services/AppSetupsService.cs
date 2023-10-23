@@ -22,6 +22,11 @@ namespace MauiBlazorClient.Services
 			return Task.FromResult(_appSetups.Single(x => x.Id == id));
 		}
 
+		public Task<IEnumerable<AppSetupDto>> GetByIds(params string[] ids)
+		{
+			return Task.FromResult(_appSetups.Where(x => ids.Contains(x.Id)).AsEnumerable());
+		}
+
 		public Task<IEnumerable<AppSetupDto>> List()
 		{
 			return Task.FromResult(_appSetups.AsEnumerable());
