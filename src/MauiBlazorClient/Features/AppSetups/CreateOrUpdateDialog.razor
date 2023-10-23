@@ -1,0 +1,71 @@
+<MudDialog DefaultFocus="DefaultFocus.FirstChild">
+	<DialogContent>
+		<MudTextField @bind-Value="_name" Label="Name" />
+		<MudTextField @bind-Value="_path" Label="Path" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CenterFocusWeak" OnAdornmentClick="@(() => PickPath())" />
+		<MudTextField @bind-Value="@_arguments" Label="Arguments" />
+	</DialogContent>
+	<DialogActions>
+		<MudButton OnClick="Cancel">Cancel</MudButton>
+		<MudButton Color="Color.Primary" OnClick="Submit">@(AppSetup is null ? "Create" : "Update")</MudButton>
+	</DialogActions>
+</MudDialog>
+@code {
+	[CascadingParameter] private MudDialogInstance _mudDialog { get; set; } = default!;
+	[Inject] private IMediator Mediator { get; set; } = default!;
+	[Inject] private IFilePickerService FilePickerService { get; set; } = default!;
+
+	[Parameter] public AppSetups.Model.AppSetup? AppSetup { get; set; }
+
+	private string _id = string.Empty;
+	private string _name = string.Empty;
+	private string _path = string.Empty;
+	private string? _arguments = string.Empty;
+
+	protected override void OnParametersSet()
+	{
+		_id = AppSetup?.Id ?? string.Empty;
+		_name = AppSetup?.Name ?? string.Empty;
+		_path = AppSetup?.Path ?? string.Empty;
+		_arguments = AppSetup?.Arguments ?? string.Empty;
+	}
+
+	private async Task Submit()
+	{
+		await Mediator.Send(new Command { Id = _id, Name = _name, Path = _path, Arguments = _arguments });
+		_mudDialog.Close(DialogResult.Ok(true));
+	}
+
+	private void Cancel() => _mudDialog.Cancel();
+
+	private async Task PickPath()
+	{
+		var (success, path) = await FilePickerService.PickOneAsync();
+		if (success)
+		{
+			_path = path;
+		}
+	}
+
+	public record Command : IRequest
+	{
+		public string? Id { get; set; }
+		public required string Name { get; set; }
+		public required string Path { get; set; }
+		public string? Arguments { get; set; }
+	}
+
+	public class Handler(IAppSetupsService _appSetupsService) : IRequestHandler<Command>
+	{
+		public async Task Handle(Command request, CancellationToken cancellationToken)
+		{
+			if (string.IsNullOrWhiteSpace(request.Id))
+			{
+				await _appSetupsService.Create(request.Name, request.Path, request.Arguments);
+			}
+			else
+			{
+				await _appSetupsService.Update(request.Id, request.Name, request.Path, request.Arguments);
+			}
+		}
+	}
+}

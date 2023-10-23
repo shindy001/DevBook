@@ -7,6 +7,9 @@
 		</CardHeaderContent>
 	</MudCardHeader>
 	<MudCardContent>
+		<MudButton @onclick="OpenCreateDialog" Variant="Variant.Filled" Color="Color.Primary">
+			Create App Setup
+		</MudButton>
 		<MudTable Items="@_model.AppSetups" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading"
 			LoadingProgressColor="Color.Info">
 			<HeaderContent>
@@ -25,22 +28,39 @@
 	</MudCardContent>
 </MudCard>
 
-@code {
+	@code {
 	[Inject] private IMediator Mediator { get; set; } = default!;
+	[Inject] private IDialogService DialogService { get; set; } = default!;
 
 	private Model _model = new();
 	private bool _loading;
 
-	protected override async Task OnInitializedAsync()
+	protected override async Task OnInitializedAsync() => await LoadData();
+
+	private async Task OpenCreateDialog()
+	{
+		var parameters = new DialogParameters<CreateOrUpdateDialog>();
+		DialogOptions closeOnEscapeKey = new DialogOptions() { CloseOnEscapeKey = true };
+
+		var dialog = await DialogService.ShowAsync<CreateOrUpdateDialog>("Create", closeOnEscapeKey);
+		var result = await dialog.Result;
+		if (!result.Canceled)
+		{
+			await LoadData();
+		}
+	}
+
+	private async Task LoadData()
 	{
 		_loading = true;
+		StateHasChanged();
 		_model = await Mediator.Send(new Query());
 		_loading = false;
 	}
 
-	public class Query : IRequest<Model> { }
+	public record Query : IRequest<Model> { }
 
-	public class Model
+	public record Model
 	{
 		public List<AppSetup> AppSetups { get; set; } = [];
 
