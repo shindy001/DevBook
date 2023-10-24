@@ -1,14 +1,17 @@
 <MudDialog DefaultFocus="DefaultFocus.FirstChild">
 	<DialogContent>
-		<MudTextField @bind-Value="_name" Label="Name" />
-		<MudTextField @bind-Value="_path" Label="Path" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CenterFocusWeak" OnAdornmentClick="@(() => PickPath())" />
-		<MudTextField @bind-Value="@_arguments" Label="Arguments" />
+		<MudForm @ref="_form" @bind-IsValid="_isValidForm" @onkeypress="SubmitOnEnterPress">
+			<MudTextField @bind-Value="_name" Required="true" Immediate="true" Label="Name" />
+			<MudTextField @bind-Value="_path" Required="true" Immediate="true" Label="Path" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CenterFocusWeak" OnAdornmentClick="@(() => PickPath())" />
+			<MudTextField @bind-Value="@_arguments" Label="Arguments" />
+		</MudForm>
 	</DialogContent>
 	<DialogActions>
 		<MudButton OnClick="Cancel">Cancel</MudButton>
-		<MudButton Color="Color.Primary" OnClick="Submit">@(AppSetup is null ? "Create" : "Update")</MudButton>
+		<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit">@(AppSetup is null ? "Create" : "Update")</MudButton>
 	</DialogActions>
 </MudDialog>
+
 @code {
 	[CascadingParameter] private MudDialogInstance _mudDialog { get; set; } = default!;
 	[Inject] private IMediator Mediator { get; set; } = default!;
@@ -21,6 +24,9 @@
 	private string _path = string.Empty;
 	private string? _arguments = string.Empty;
 
+	private MudForm _form = default!;
+	private bool _isValidForm;
+
 	protected override void OnParametersSet()
 	{
 		_id = AppSetup?.Id ?? string.Empty;
@@ -29,10 +35,22 @@
 		_arguments = AppSetup?.Arguments ?? string.Empty;
 	}
 
+	private async Task SubmitOnEnterPress(KeyboardEventArgs e)
+	{
+		if (e.Code == "Enter")
+		{
+			await Submit();
+		}
+	}
+
 	private async Task Submit()
 	{
-		await Mediator.Send(new Command { Id = _id, Name = _name, Path = _path, Arguments = _arguments });
-		_mudDialog.Close(DialogResult.Ok(true));
+		await _form.Validate();
+		if (_isValidForm)
+		{
+			await Mediator.Send(new Command { Id = _id, Name = _name, Path = _path, Arguments = _arguments });
+			_mudDialog.Close(DialogResult.Ok(true));
+		}
 	}
 
 	private void Cancel() => _mudDialog.Cancel();
