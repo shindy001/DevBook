@@ -10,7 +10,7 @@ namespace MauiBlazorClient.Services
 		public StartupProfilesService()
 		{
 			var faker = new Faker<StartupProfileDto>()
-				.RuleFor(x => x.Id, Guid.NewGuid().ToString())
+				.RuleFor(x => x.Id, f => Guid.NewGuid().ToString())
 				.RuleFor(x => x.Name, f => f.Lorem.Slug());
 			_startupProfiles.AddRange(faker.Generate(10));
 		}
@@ -27,16 +27,16 @@ namespace MauiBlazorClient.Services
 
 		public Task Create(string name, List<string> appSetupIds)
 		{
-			_startupProfiles.Add(new StartupProfileDto { Id = Guid.NewGuid().ToString(), Name = name });
+			_startupProfiles.Add(new StartupProfileDto { Id = Guid.NewGuid().ToString(), Name = name, AppSetupIds = appSetupIds });
 			return Task.CompletedTask;
 		}
 
 		public Task Update(string id, string name, List<string> appSetupIds)
 		{
-			var appSetup = _startupProfiles.Single(x => x.Id == id);
-			if (appSetup is not null)
+			var itemIndex = _startupProfiles.FindIndex(x => x.Id == id);
+			if (itemIndex is not -1)
 			{
-				appSetup = new StartupProfileDto { Id = appSetup.Id, Name = name };
+				_startupProfiles[itemIndex] = new StartupProfileDto { Id = id, Name = name, AppSetupIds = appSetupIds };
 			}
 			return Task.CompletedTask;
 		}

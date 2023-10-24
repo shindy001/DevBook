@@ -10,7 +10,7 @@ namespace MauiBlazorClient.Services
 		public AppSetupsService()
 		{
 			var faker = new Faker<AppSetupDto>()
-				.RuleFor(x => x.Id, Guid.NewGuid().ToString())
+				.RuleFor(x => x.Id, f => Guid.NewGuid().ToString())
 				.RuleFor(x => x.Name, f => f.System.FileName())
 				.RuleFor(x => x.Path, f => f.System.FilePath())
 				.RuleFor(x => x.Arguments, f => f.Lorem.Word());
@@ -40,10 +40,10 @@ namespace MauiBlazorClient.Services
 
 		public Task Update(string id, string name, string path, string? arguments)
 		{
-			var appSetup = _appSetups.Single(x => x.Id == id);
-			if (appSetup is not null)
+			var itemIndex = _appSetups.FindIndex(x => x.Id == id);
+			if (itemIndex is not -1)
 			{
-				appSetup = new AppSetupDto { Id = appSetup.Id, Name = name, Path = path, Arguments = arguments };
+				_appSetups[itemIndex] = new AppSetupDto { Id = id, Name = name, Path = path, Arguments = arguments };
 			}
 			return Task.CompletedTask;
 		}
