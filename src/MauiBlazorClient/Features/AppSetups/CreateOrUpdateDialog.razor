@@ -2,7 +2,7 @@
 	<DialogContent>
 		<MudForm @ref="_form" @bind-IsValid="_isValidForm" @onkeypress="SubmitOnEnterPress">
 			<MudTextField @bind-Value="_name" Required="true" Immediate="true" Label="Name" />
-			<MudTextField @bind-Value="_path" Required="true" Immediate="true" Label="Path" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CenterFocusWeak" OnAdornmentClick="@(() => PickPath())" />
+			<MudTextField @bind-Value="_path" Required="true" Immediate="true" Label="Path" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.FolderOpen" OnAdornmentClick="@(() => PickPath())" />
 			<MudTextField @bind-Value="@_arguments" Label="Arguments" />
 		</MudForm>
 	</DialogContent>

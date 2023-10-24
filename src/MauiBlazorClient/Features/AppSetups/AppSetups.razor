@@ -17,12 +17,16 @@
 				<MudTh>Name</MudTh>
 				<MudTh>Path</MudTh>
 				<MudTh>Arguments</MudTh>
+				<MudTh>Actions</MudTh>
 			</HeaderContent>
 			<RowTemplate>
 				<MudTd>@(_model.AppSetups.IndexOf(context)+1)</MudTd>
 				<MudTd DataLabel="Name">@context.Name</MudTd>
-				<MudTd DataLabel="Path">@context.Path</MudTd>
+				<MudTd DataLabel="Path" Style="max-width: 20rem; white-space: nowrap; text-overflow: ellipsis; overflow: hidden">@context.Path</MudTd>
 				<MudTd DataLabel="Arguments">@context.Arguments</MudTd>
+				<MudTd>
+					<MudIconButton Icon="@Icons.Material.Filled.Edit" aria-label="edit" OnClick="(() => OpenEditDialog(context))"></MudIconButton>
+				</MudTd>
 			</RowTemplate>
 		</MudTable>
 	</MudCardContent>
@@ -34,15 +38,26 @@
 
 	private Model _model = new();
 	private bool _loading;
+	private readonly DialogOptions _dialogOptions = new DialogOptions() { CloseOnEscapeKey = true };
 
 	protected override async Task OnInitializedAsync() => await LoadData();
 
 	private async Task OpenCreateDialog()
 	{
-		var parameters = new DialogParameters<CreateOrUpdateDialog>();
-		DialogOptions closeOnEscapeKey = new DialogOptions() { CloseOnEscapeKey = true };
+		var dialog = await DialogService.ShowAsync<CreateOrUpdateDialog>("Create", _dialogOptions);
+		var result = await dialog.Result;
+		if (!result.Canceled)
+		{
+			await LoadData();
+		}
+	}
 
-		var dialog = await DialogService.ShowAsync<CreateOrUpdateDialog>("Create", closeOnEscapeKey);
+	private async Task OpenEditDialog(Model.AppSetup appSetup)
+	{
+		var parameters = new DialogParameters<CreateOrUpdateDialog>();
+		parameters.Add(x => x.AppSetup, appSetup);
+
+		var dialog = await DialogService.ShowAsync<CreateOrUpdateDialog>("Update", parameters, _dialogOptions);
 		var result = await dialog.Result;
 		if (!result.Canceled)
 		{
