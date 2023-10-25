@@ -1,0 +1,26 @@
+﻿<MudDialog DefaultFocus="DefaultFocus.LastChild">
+	<DialogContent>
+		<MudText>@ContentText</MudText>
+	</DialogContent>
+	<DialogActions>
+		<MudButton OnClick="Cancel">Cancel</MudButton>
+			<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit" @onkeypress="SubmitOnEnterPress">@ButtonText</MudButton>
+	</DialogActions>
+</MudDialog>
+
+@code {
+	[CascadingParameter] private MudDialogInstance _mudDialog { get; set; } = default!;
+	[Parameter] public string ContentText { get; set; } = "Are you Sure?";
+	[Parameter] public string ButtonText { get; set; } = "Yes";
+
+	private void SubmitOnEnterPress(KeyboardEventArgs e)
+	{
+		if (e.Code == "Enter")
+		{
+			Submit();
+		}
+	}
+
+	void Submit() => _mudDialog.Close(DialogResult.Ok(true));
+	void Cancel() => _mudDialog.Cancel();
+}

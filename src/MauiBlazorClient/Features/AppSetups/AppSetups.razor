@@ -24,15 +24,18 @@
 				<MudTd DataLabel="Name">@context.Name</MudTd>
 				<MudTd DataLabel="Path" Style="max-width: 20rem; white-space: nowrap; text-overflow: ellipsis; overflow: hidden">@context.Path</MudTd>
 				<MudTd DataLabel="Arguments">@context.Arguments</MudTd>
-				<MudTd>
-					<MudIconButton Icon="@Icons.Material.Filled.Edit" aria-label="edit" OnClick="(() => OpenEditDialog(context))"></MudIconButton>
+				<MudTd DataLabel="Actions" Class="d-flex justify-sm-space-between">
+					<div>
+						<MudIconButton Icon="@Icons.Material.Filled.Edit" aria-label="edit" OnClick="(() => OpenEditDialog(context))"></MudIconButton>
+						<MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete" OnClick="(() => Delete(context))"></MudIconButton>
+					</div>
 				</MudTd>
 			</RowTemplate>
 		</MudTable>
 	</MudCardContent>
 </MudCard>
 
-	@code {
+@code {
 	[Inject] private IMediator Mediator { get; set; } = default!;
 	[Inject] private IDialogService DialogService { get; set; } = default!;
 
@@ -65,15 +68,31 @@
 		}
 	}
 
+	private async Task Delete(Model.AppSetup appSetup)
+	{
+		var parameters = new DialogParameters<ConfirmationDialog>();
+		parameters.Add(x => x.ContentText, $"Are you sure you want to delete '{appSetup.Name}' ?");
+
+		var dialog = await DialogService.ShowAsync<ConfirmationDialog>("Delete", parameters, _dialogOptions);
+		var result = await dialog.Result;
+		if (!result.Canceled)
+		{
+			await Mediator.Send(new DeleteCommand(appSetup.Id));
+			await LoadData();
+		}
+	}
+
 	private async Task LoadData()
 	{
 		_loading = true;
 		StateHasChanged();
-		_model = await Mediator.Send(new Query());
+		_model = await Mediator.Send(new GetModelQuery());
 		_loading = false;
 	}
 
-	public record Query : IRequest<Model> { }
+	public record DeleteCommand(string Id) : IRequest;
+
+	public record GetModelQuery : IRequest<Model> { }
 
 	public record Model
 	{
@@ -82,12 +101,20 @@
 		public record AppSetup(string Id, string Name, string Path, string? Arguments);
 	}
 
-	public class Handler(IAppSetupsService _appSetupsService) : IRequestHandler<Query, Model>
+	public class GetModelQueryHandler(IAppSetupsService _appSetupsService) : IRequestHandler<GetModelQuery, Model>
 	{
-		public async Task<Model> Handle(Query request, CancellationToken cancellationToken)
+		public async Task<Model> Handle(GetModelQuery request, CancellationToken cancellationToken)
 		{
 			var appSetupDtos = await _appSetupsService.List();
 			return new Model { AppSetups = appSetupDtos.Select(x => new Model.AppSetup(x.Id, x.Name, x.Path, x.Arguments)).ToList() };
+		}
+	}
+
+	public class DeleteCommandHandler(IAppSetupsService _appSetupsService) : IRequestHandler<DeleteCommand>
+	{
+		public async Task Handle(DeleteCommand request, CancellationToken cancellationToken)
+		{
+			await _appSetupsService.Delete(request.Id);
 		}
 	}
 }
