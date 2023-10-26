@@ -17,6 +17,14 @@ public partial class AppSetups
 
 	protected override async Task OnInitializedAsync() => await LoadData();
 
+	private async Task LoadData()
+	{
+		_loading = true;
+		StateHasChanged();
+		_model = await Mediator.Send(new GetModelQuery());
+		_loading = false;
+	}
+
 	private async Task OpenCreateDialog()
 	{
 		var dialog = await DialogService.ShowAsync<CreateOrUpdateDialog>("Create", _dialogOptions);
@@ -52,14 +60,6 @@ public partial class AppSetups
 			await Mediator.Send(new DeleteCommand(appSetup.Id));
 			await LoadData();
 		}
-	}
-
-	private async Task LoadData()
-	{
-		_loading = true;
-		StateHasChanged();
-		_model = await Mediator.Send(new GetModelQuery());
-		_loading = false;
 	}
 
 	public record DeleteCommand(string Id) : IRequest;

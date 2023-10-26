@@ -8,7 +8,7 @@ namespace MauiBlazorClient.Features.AppSetups;
 
 public partial class CreateOrUpdateDialog
 {
-	[CascadingParameter] private MudDialogInstance _mudDialog { get; set; } = default!;
+	[CascadingParameter] private MudDialogInstance MudDialog { get; set; } = default!;
 	[Inject] private IMediator Mediator { get; set; } = default!;
 	[Inject] private IFilePickerService FilePickerService { get; set; } = default!;
 
@@ -44,11 +44,11 @@ public partial class CreateOrUpdateDialog
 		if (_isValidForm)
 		{
 			await Mediator.Send(new Command { Id = _id, Name = _name, Path = _path, Arguments = _arguments });
-			_mudDialog.Close(DialogResult.Ok(true));
+			MudDialog.Close(DialogResult.Ok(true));
 		}
 	}
 
-	private void Cancel() => _mudDialog.Cancel();
+	private void Cancel() => MudDialog.Cancel();
 
 	private async Task PickPath()
 	{
