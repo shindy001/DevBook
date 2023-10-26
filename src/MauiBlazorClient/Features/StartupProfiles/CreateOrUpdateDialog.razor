@@ -1,0 +1,17 @@
+﻿<MudDialog DefaultFocus="DefaultFocus.FirstChild">
+	<DialogContent>
+		<MudForm @ref="_form" @bind-IsValid="_isValidForm" @onkeypress="SubmitOnEnterPress">
+			<MudTextField @bind-Value="_name" Required="true" Immediate="true" Label="Name" />
+			<MudSelect T="StartupProfiles.Model.AvailableAppSetup"  Label="App Setups" MultiSelection="true" @bind-SelectedValues="_selectedAppSetups">
+				@foreach (var appSetup in AvailableAppSetups)
+				{
+					<MudSelectItem Value="@appSetup">@appSetup.Name</MudSelectItem>
+				}
+			</MudSelect>
+		</MudForm>
+	</DialogContent>
+	<DialogActions>
+		<MudButton OnClick="Cancel">Cancel</MudButton>
+		<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit">@(StartupProfile is null ? "Create" : "Update")</MudButton>
+	</DialogActions>
+</MudDialog>

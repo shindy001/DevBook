@@ -25,13 +25,13 @@ namespace MauiBlazorClient.Services
 			return Task.FromResult(_startupProfiles.AsEnumerable());
 		}
 
-		public Task Create(string name, List<string> appSetupIds)
+		public Task Create(string name, IEnumerable<string> appSetupIds)
 		{
 			_startupProfiles.Add(new StartupProfileDto { Id = Guid.NewGuid().ToString(), Name = name, AppSetupIds = appSetupIds });
 			return Task.CompletedTask;
 		}
 
-		public Task Update(string id, string name, List<string> appSetupIds)
+		public Task Update(string id, string name, IEnumerable<string> appSetupIds)
 		{
 			var itemIndex = _startupProfiles.FindIndex(x => x.Id == id);
 			if (itemIndex is not -1)
