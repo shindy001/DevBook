@@ -1,18 +1,25 @@
-﻿<MudCard Class="d-inline-flex flex-column">
+﻿<MudCard Class="inline-flex flex-col w-1/2">
 	<MudCardHeader>
 		<CardHeaderContent>
 			<MudText Typo="Typo.h6">Startup Profiles</MudText>
 		</CardHeaderContent>
 	</MudCardHeader>
-	<MudCardContent Class="d-inline-flex flex-row align-center gap-1">
-		<MudSelect Style="margin-top:0" T="Model.StartupProfileOption" @bind-Value="_selectedOption" Label="Startup Profile" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+	<MudCardContent Class="flex gap-1">
+		<MudSelect Class="mt-0" T="Model.StartupProfileOption" @bind-Value="_selectedOption" Label="Startup Profile" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
 			@foreach(var startupProfileOption in _model.StartupProfileOptions)
 			{
 				<MudSelectItem Value="@startupProfileOption">@startupProfileOption.Name</MudSelectItem>
 			}
 		</MudSelect>
 		<MudTooltip Delay="600" Text="Launch Profile Apps" Placement="Placement.Top">
-			<MudIconButton Icon="@Icons.Material.Filled.PlayArrow" Color="Color.Primary" OnClick="(() => LaunchProfileApps())" aria-label="launch profile apps" Variant="Variant.Filled" Size="Size.Large" Style="height: 3.5rem;" />
+			<MudIconButton
+				Class="h-14"
+				Icon="@Icons.Material.Filled.PlayArrow"
+				Variant="Variant.Filled"
+				Size="Size.Large"
+				Color="Color.Primary"
+				OnClick="(() => LaunchProfileApps())"
+				aria-label="launch profile apps" />
 		</MudTooltip>
 	</MudCardContent>
 </MudCard>

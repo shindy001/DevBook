@@ -52,4 +52,9 @@
 		<PackageReference Include="MudBlazor" Version="6.11.0" />
 	</ItemGroup>
 
+	<!-- Start tailwindcss.exe in watch mode for hot reload - spawns a new powershell window after build/rebuild -->
+	<Target Name="PostBuild" AfterTargets="AfterBuild; AfterRebuild">
+		<Exec Command="powershell Start-Process $(ProjectDir)tailwindwatch.bat" />
+	</Target>
+
 </Project>
