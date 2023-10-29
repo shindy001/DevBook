@@ -1,7 +1,6 @@
-﻿namespace MauiBlazorClient.Services
+﻿namespace MauiBlazorClient.Services;
+
+public interface IFilePickerService
 {
-	public interface IFilePickerService
-	{
-		public Task<(bool success, string path)> PickOneAsync(params string[] allowedFileExtensions);
-	}
+	public Task<(bool success, string path)> PickOneAsync(params string[] allowedFileExtensions);
 }
