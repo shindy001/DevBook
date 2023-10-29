@@ -1,52 +1,105 @@
 ﻿using MauiBlazorClient.Services;
+using MauiBlazorClient.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 
-namespace MauiBlazorClient.Features.Dashboard
+namespace MauiBlazorClient.Features.Dashboard;
+
+public partial class StartupProfilesWidget
 {
-	public partial class StartupProfilesWidget
+	[Inject] private IDialogService DialogService { get; set; } = default!;
+	[Inject] private IMediator Mediator { get; set; } = default!;
+	private Model _model = new();
+	private Model.StartupProfileOption? _selectedOption;
+
+	protected override async Task OnInitializedAsync()
 	{
-		[Inject] private IMediator Mediator { get; set; } = default!;
-		private Model _model = new();
-		private Model.StartupProfileOption? _selectedOption;
+		_model = await Mediator.Send(new GetModelQuery());
+	}
 
-		protected override async Task OnInitializedAsync()
+	private async Task LaunchProfileApps()
+	{
+		if (_selectedOption is null)
 		{
-			_model = await Mediator.Send(new GetModelQuery());
+			return;
 		}
 
-		private Task LaunchProfileApps()
+		var result  = await Mediator.Send(new LaunchProfileAppsCommand(_selectedOption.Id));
+		if (!result.Success)
 		{
-			if (_selectedOption is not null)
+			var parameters = new DialogParameters<ErrorDialog>();
+			parameters.Add(x => x.ErrorMessage, result.Errors is null ? null : string.Join(Environment.NewLine, result.Errors));
+			var dialog = await DialogService.ShowAsync<ErrorDialog>("Error", parameters, new DialogOptions() { CloseOnEscapeKey = true });
+		}
+	}
+
+	public record GetModelQuery : IRequest<Model>;
+	public record LaunchProfileAppsCommand(string Id) : IRequest<LaunchProfileAppsCommand.Result>
+	{
+		public record Result(bool Success, string[]? Errors = null);
+	}
+
+	public record Model
+	{
+		public List<StartupProfileOption> StartupProfileOptions { get; set; } = [];
+
+		public record StartupProfileOption(string Id, string Name)
+		{
+			public override string ToString() => Name;
+		}
+	}
+
+	public class GetModelQueryHandler(IStartupProfilesService _startupProfilesService) : IRequestHandler<GetModelQuery, Model>
+	{
+		public async Task<Model> Handle(GetModelQuery request, CancellationToken cancellationToken)
+		{
+			var startupProfileDtos = await _startupProfilesService.List();
+			return new Model { StartupProfileOptions = startupProfileDtos?.Select(x => new Model.StartupProfileOption(x.Id, x.Name)).ToList() ?? [] };
+		}
+	}
+
+	public class LaunchProfileAppsHandler(
+		IStartupProfilesService _startupProfilesService,
+		IAppSetupsService _appSetupsService,
+		IProcessService _processService)
+	: IRequestHandler<LaunchProfileAppsCommand, LaunchProfileAppsCommand.Result>
+	{
+		public async Task<LaunchProfileAppsCommand.Result> Handle(LaunchProfileAppsCommand request, CancellationToken cancellationToken)
+		{
+			var profile = await _startupProfilesService.Get(request.Id);
+			return profile?.AppSetupIds?.Any() == true
+				? await LaunchApps(profile.AppSetupIds)
+				: new(Success: true);
+		}
+
+		private async Task<LaunchProfileAppsCommand.Result> LaunchApps(IEnumerable<string> appSetupIds)
+		{
+			var appSetups = await _appSetupsService.GetByIds(appSetupIds.ToArray());
+
+			foreach (var appSetup in appSetups)
 			{
-				// TODO
-				// Mediator.Send(new LaunchStartupProfile(_selectedOption.Id)
-				// Handler:
-				//	Get StartupProfile by id
-				//	Extract appSetupIds and get them
-				//	Launch apps via ProcessService
+				var result = await LaunchApp(appSetup.Path, appSetup.Arguments);
+				if (!result.Success)
+				{
+					return result;
+				}
 			}
-			return Task.CompletedTask;
+
+			return new(Success: true);
 		}
 
-		public record GetModelQuery : IRequest<Model>;
-
-		public record Model
+		private async Task<LaunchProfileAppsCommand.Result> LaunchApp(string appSetupPath, string? appSetupArguments)
 		{
-			public List<StartupProfileOption> StartupProfileOptions { get; set; } = [];
-
-			public record StartupProfileOption(string Id, string Name)
+			try
 			{
-				public override string ToString() => Name;
+				await _processService.Start(appSetupPath, appSetupArguments);
+				return new(Success: true);
 			}
-		}
-
-		public class GetModelQueryHandler(IStartupProfilesService _startupProfilesService) : IRequestHandler<GetModelQuery, Model>
-		{
-			public async Task<Model> Handle(GetModelQuery request, CancellationToken cancellationToken)
+			catch (Exception e)
 			{
-				var startupProfileDtos = await _startupProfilesService.List();
-				return new Model { StartupProfileOptions = startupProfileDtos?.Select(x => new Model.StartupProfileOption(x.Id, x.Name)).ToList() ?? [] };
+				// Log error
+				return new(Success: false, Errors: [$"Error while trying to start appSetup: '{appSetupPath}'. Details: {e.Message}"]);
 			}
 		}
 	}
