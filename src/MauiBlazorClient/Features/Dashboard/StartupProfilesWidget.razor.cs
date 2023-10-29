@@ -31,7 +31,7 @@ namespace MauiBlazorClient.Features.Dashboard
 
 		public record GetModelQuery : IRequest<Model>;
 
-		public class Model
+		public record Model
 		{
 			public List<StartupProfileOption> StartupProfileOptions { get; set; } = [];
 

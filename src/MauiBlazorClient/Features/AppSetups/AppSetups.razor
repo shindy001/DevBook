@@ -1,15 +1,17 @@
 ﻿@page "/appsetups"
 
-<MudCard class="m-4">
+<MudCard Class="m-4">
 	<MudCardHeader>
 		<CardHeaderContent>
-			<MudText Typo="Typo.h5">App Setups</MudText>
+			<div class="flex justify-between">
+				<MudText Typo="Typo.h5">App Setups</MudText>
+				<MudButton StartIcon="@Icons.Material.Filled.Add" @onclick="OpenCreateDialog" Variant="Variant.Filled" Color="Color.Primary">
+					Create New
+				</MudButton>
+			</div>
 		</CardHeaderContent>
 	</MudCardHeader>
 	<MudCardContent>
-		<MudButton @onclick="OpenCreateDialog" Variant="Variant.Filled" Color="Color.Primary">
-			Create App Setup
-		</MudButton>
 		<MudTable Items="@_model.AppSetups" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading"
 			LoadingProgressColor="Color.Info">
 			<HeaderContent>
@@ -20,7 +22,7 @@
 				<MudTh>Actions</MudTh>
 			</HeaderContent>
 			<RowTemplate>
-				<MudTd>@(_model.AppSetups.IndexOf(context)+1)</MudTd>
+				<MudTd DataLabel="#">@(_model.AppSetups.IndexOf(context) + 1)</MudTd>
 				<MudTd DataLabel="Name" Class="max-w-xs whitespace-nowrap text-ellipsis overflow-hidden">@context.Name</MudTd>
 				<MudTd DataLabel="Path" Class="max-w-xs whitespace-nowrap text-ellipsis overflow-hidden">@context.Path</MudTd>
 				<MudTd DataLabel="Arguments">@context.Arguments</MudTd>

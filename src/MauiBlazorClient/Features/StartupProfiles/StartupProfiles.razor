@@ -1,15 +1,17 @@
 ﻿@page "/startupprofiles"
 
-<MudCard class="m-4">
+<MudCard Class="m-4">
 	<MudCardHeader>
 		<CardHeaderContent>
-			<MudText Typo="Typo.h5">Startup Profiles</MudText>
+			<div class="flex justify-between">
+				<MudText Typo="Typo.h5">Startup Profiles</MudText>
+				<MudButton StartIcon="@Icons.Material.Filled.Add" @onclick="OpenCreateDialog" Variant="Variant.Filled" Color="Color.Primary">
+					Create New
+				</MudButton>
+			</div>
 		</CardHeaderContent>
 	</MudCardHeader>
 	<MudCardContent>
-		<MudButton @onclick="OpenCreateDialog" Variant="Variant.Filled" Color="Color.Primary">
-			Create Startup Profile
-		</MudButton>
 		<MudTable Items="@_model.StartupProfiles" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading"
 			LoadingProgressColor="Color.Info">
 			<HeaderContent>
@@ -19,10 +21,10 @@
 				<MudTh>Actions</MudTh>
 			</HeaderContent>
 			<RowTemplate>
-				<MudTd>@(_model.StartupProfiles.IndexOf(context)+1)</MudTd>
+				<MudTd DataLabel="#">@(_model.StartupProfiles.IndexOf(context) + 1)</MudTd>
 				<MudTd DataLabel="Name">@context.Name</MudTd>
 				<MudTd DataLabel="AppSetups">@string.Join(", ", context.AppSetupIds)</MudTd>
-					<MudTd DataLabel="Actions" Class="flex">
+				<MudTd DataLabel="Actions" Class="flex">
 					<div>
 						<MudIconButton Icon="@Icons.Material.Filled.Edit" aria-label="edit" OnClick="(() => OpenEditDialog(context))"></MudIconButton>
 						<MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete" OnClick="(() => Delete(context))"></MudIconButton>

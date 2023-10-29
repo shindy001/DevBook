@@ -30,7 +30,7 @@ public partial class StartupProfiles
 		var parameters = new DialogParameters<CreateOrUpdateDialog>();
 		parameters.Add(x => x.AvailableAppSetups, _model.AvailableAppSetups);
 
-		var dialog = await DialogService.ShowAsync<CreateOrUpdateDialog>("Create", _dialogOptions);
+		var dialog = await DialogService.ShowAsync<CreateOrUpdateDialog>("Create", parameters, _dialogOptions);
 		var result = await dialog.Result;
 		if (!result.Canceled)
 		{
