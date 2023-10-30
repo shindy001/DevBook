@@ -1,5 +1,23 @@
 ﻿@page "/startupprofiles"
 
+<MudDialog DefaultFocus="DefaultFocus.FirstChild" @bind-IsVisible="_isCreateOrUpdateDialogVisible" Options="_dialogOptions">
+	<DialogContent>
+		<MudForm @ref="_createOrUpdateForm" @bind-IsValid="_isValidCreateOrUpdateForm" @onkeypress="SubmitOnEnterPress">
+			<MudTextField @bind-Value="_formNameField" Required="true" Immediate="true" Label="Name" />
+			<MudSelect T="StartupProfiles.Model.AvailableAppSetup" Label="App Setups" MultiSelection="true" @bind-SelectedValues="_selectedAppSetups">
+				@foreach (var appSetup in _model.AvailableAppSetups)
+				{
+					<MudSelectItem Value="@appSetup">@appSetup.Name</MudSelectItem>
+				}
+			</MudSelect>
+		</MudForm>
+	</DialogContent>
+	<DialogActions>
+		<MudButton OnClick="CancelCreateOrUpdateDialog">Cancel</MudButton>
+		<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitCreateOrUpdate">@(_formIdField is null ? "Create" : "Update")</MudButton>
+	</DialogActions>
+</MudDialog>
+
 <MudCard Class="m-4">
 	<MudCardHeader>
 		<CardHeaderContent>
@@ -27,7 +45,7 @@
 				<MudTd DataLabel="Actions" Class="flex">
 					<div>
 						<MudIconButton Icon="@Icons.Material.Filled.Edit" aria-label="edit" OnClick="(() => OpenEditDialog(context))"></MudIconButton>
-						<MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete" OnClick="(() => Delete(context))"></MudIconButton>
+						<MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete" OnClick="(() => SubmitDelete(context))"></MudIconButton>
 					</div>
 				</MudTd>
 			</RowTemplate>

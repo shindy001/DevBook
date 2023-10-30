@@ -2,6 +2,7 @@
 using MauiBlazorClient.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 
 namespace MauiBlazorClient.Features.StartupProfiles;
@@ -13,7 +14,14 @@ public partial class StartupProfiles
 
 	private Model _model = new();
 	private bool _loading;
-	private readonly DialogOptions _dialogOptions = new DialogOptions() { CloseOnEscapeKey = true };
+	private readonly DialogOptions _dialogOptions = new() { CloseOnEscapeKey = true };
+
+	private MudForm _createOrUpdateForm = default!;
+	private bool _isValidCreateOrUpdateForm;
+	private bool _isCreateOrUpdateDialogVisible;
+	private string? _formIdField;
+	private string _formNameField = string.Empty;
+	private IEnumerable<Model.AvailableAppSetup> _selectedAppSetups = [];
 
 	protected override async Task OnInitializedAsync() => await LoadData();
 
@@ -25,34 +33,48 @@ public partial class StartupProfiles
 		_loading = false;
 	}
 
-	private async Task OpenCreateDialog()
+	private void ResetCreateOrUpdateDialogData()
 	{
-		var parameters = new DialogParameters<CreateOrUpdateDialog>();
-		parameters.Add(x => x.AvailableAppSetups, _model.AvailableAppSetups);
+		_formIdField = null;
+		_formNameField = string.Empty;
+		_selectedAppSetups = [];
+	}
 
-		var dialog = await DialogService.ShowAsync<CreateOrUpdateDialog>("Create", parameters, _dialogOptions);
-		var result = await dialog.Result;
-		if (!result.Canceled)
+	private void OpenCreateDialog()
+	{
+		ResetCreateOrUpdateDialogData();
+		_isCreateOrUpdateDialogVisible = true;
+	}
+
+	private void OpenEditDialog(Model.StartupProfile startupProfile)
+	{
+		_formIdField = startupProfile.Id;
+		_formNameField = startupProfile.Name;
+		_selectedAppSetups = _model.AvailableAppSetups.Where(x => startupProfile?.AppSetupIds.Contains(x.Id) == true) ?? [];
+		_isCreateOrUpdateDialogVisible = true;
+	}
+
+	private async Task SubmitOnEnterPress(KeyboardEventArgs e)
+	{
+		if (e.Code == "Enter")
 		{
-			await LoadData();
+			await SubmitCreateOrUpdate();
 		}
 	}
 
-	private async Task OpenEditDialog(Model.StartupProfile startupProfile)
+	private async Task SubmitCreateOrUpdate()
 	{
-		var parameters = new DialogParameters<CreateOrUpdateDialog>();
-		parameters.Add(x => x.StartupProfile, startupProfile);
-		parameters.Add(x => x.AvailableAppSetups, _model.AvailableAppSetups);
-
-		var dialog = await DialogService.ShowAsync<CreateOrUpdateDialog>("Update", parameters, _dialogOptions);
-		var result = await dialog.Result;
-		if (!result.Canceled)
+		await _createOrUpdateForm.Validate();
+		if (_isValidCreateOrUpdateForm)
 		{
+			await Mediator.Send(new CreateOrUpdateCommand { Id = _formIdField, Name = _formNameField, AppSetupIds = _selectedAppSetups.Select(x => x.Id).ToList() });
 			await LoadData();
+			_isCreateOrUpdateDialogVisible = false;
+			ResetCreateOrUpdateDialogData();
 		}
 	}
 
-	private async Task Delete(Model.StartupProfile startupProfile)
+	private async Task SubmitDelete(Model.StartupProfile startupProfile)
 	{
 		var parameters = new DialogParameters<ConfirmationDialog>();
 		parameters.Add(x => x.ContentText, $"Are you sure you want to delete '{startupProfile.Name}' ?");
@@ -66,7 +88,20 @@ public partial class StartupProfiles
 		}
 	}
 
+	private void CancelCreateOrUpdateDialog()
+	{
+		_isCreateOrUpdateDialogVisible = false;
+		ResetCreateOrUpdateDialogData();
+	}
+
 	public class GetModelQuery : IRequest<Model> { }
+
+	public record CreateOrUpdateCommand : IRequest
+	{
+		public string? Id { get; set; }
+		public required string Name { get; set; }
+		public List<string> AppSetupIds { get; set; } = [];
+	}
 
 	public record DeleteCommand(string Id) : IRequest;
 
@@ -99,6 +134,21 @@ public partial class StartupProfiles
 				model.StartupProfiles.Add(new Model.StartupProfile(startuProfileDto.Id, startuProfileDto.Name, appSetupNames));
 			}
 			return model;
+		}
+	}
+
+	public class CreateOrUpdateCommandHandler(IStartupProfilesService _startupProfilesService) : IRequestHandler<CreateOrUpdateCommand>
+	{
+		public async Task Handle(CreateOrUpdateCommand request, CancellationToken cancellationToken)
+		{
+			if (string.IsNullOrWhiteSpace(request.Id))
+			{
+				await _startupProfilesService.Create(request.Name, request.AppSetupIds);
+			}
+			else
+			{
+				await _startupProfilesService.Update(request.Id, request.Name, request.AppSetupIds);
+			}
 		}
 	}
 

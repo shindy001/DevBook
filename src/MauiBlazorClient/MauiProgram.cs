@@ -34,7 +34,7 @@ public static class MauiProgram
 			{
 				windowLifecycleBuilder.OnWindowCreated(window =>
 				{
-					var minWindowWidth = 960;
+					var minWindowWidth = 1000;
 					var minWindowHeigh = 660;
 					var restrictedWindow = new Window()
 					{
