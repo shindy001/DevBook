@@ -10,12 +10,15 @@ public partial class StartupProfilesWidget
 {
 	[Inject] private IDialogService DialogService { get; set; } = default!;
 	[Inject] private IMediator Mediator { get; set; } = default!;
+	[Inject] private IAppStore AppStore { get; set; } = default!;
+
 	private Model _model = new();
 	private Model.StartupProfileOption? _selectedOption;
 
 	protected override async Task OnInitializedAsync()
 	{
 		_model = await Mediator.Send(new GetModelQuery());
+		_selectedOption = _model.StartupProfileOptions.FirstOrDefault(x => x.Id.Equals(AppStore.DashboardData.SelectedProfileId));
 	}
 
 	private async Task LaunchProfileApps()
@@ -32,6 +35,12 @@ public partial class StartupProfilesWidget
 			parameters.Add(x => x.ErrorMessage, result.Errors is null ? null : string.Join(Environment.NewLine, result.Errors));
 			var dialog = await DialogService.ShowAsync<ErrorDialog>("Error", parameters, new DialogOptions() { CloseOnEscapeKey = true });
 		}
+	}
+
+	private void OnSelectedOptionChanged(Model.StartupProfileOption option)
+	{
+		_selectedOption = option;
+		AppStore.DashboardData.SelectedProfileId = option.Id;
 	}
 
 	public record GetModelQuery : IRequest<Model>;

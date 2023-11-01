@@ -21,8 +21,8 @@ public partial class AppSetups
 	private bool _isValidCreateOrUpdateForm;
 	private bool _isCreateOrUpdateDialogVisible;
 	private string? _formIdField = null;
-	private string? _formNameField = null;
-	private string? _formPathField = null;
+	private string _formNameField = string.Empty;
+	private string _formPathField = string.Empty;
 	private string? _formArgumentsField = null;
 
 	protected override async Task OnInitializedAsync() => await LoadData();
@@ -38,8 +38,8 @@ public partial class AppSetups
 	private void ResetCreateOrUpdateDialogData()
 	{
 		_formIdField = null;
-		_formNameField = null;
-		_formPathField = null;
+		_formNameField = string.Empty;
+		_formPathField = string.Empty;
 		_formArgumentsField = null;
 	}
 

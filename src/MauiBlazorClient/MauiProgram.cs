@@ -8,7 +8,6 @@ namespace MauiBlazorClient;
 
 public static class MauiProgram
 {
-
 	public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
@@ -67,5 +66,10 @@ public static class MauiProgram
 
 		services.AddSingleton<IAppSetupsService, AppSetupsService>();
 		services.AddSingleton<IStartupProfilesService, StartupProfilesService>();
+
+		var appStore = new AppStore();
+		appStore.Initialize();
+
+		services.AddSingleton<IAppStore>(appStore);
 	}
 }

@@ -5,7 +5,7 @@
 		</CardHeaderContent>
 	</MudCardHeader>
 	<MudCardContent Class="flex gap-1">
-		<MudSelect Class="mt-0" T="Model.StartupProfileOption" @bind-Value="_selectedOption" Label="Startup Profile" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+		<MudSelect Class="mt-0" T="Model.StartupProfileOption" Value="_selectedOption" ValueChanged="OnSelectedOptionChanged" Label="Startup Profile" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
 			@foreach(var startupProfileOption in _model.StartupProfileOptions)
 			{
 				<MudSelectItem Value="@startupProfileOption">@startupProfileOption.Name</MudSelectItem>
