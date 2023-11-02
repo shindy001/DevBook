@@ -1,14 +1,12 @@
 ﻿using MauiBlazorClient.Services;
-using MauiBlazorClient.Shared;
+using MauiBlazorClient.Services.DTO;
 using MediatR;
 using Microsoft.AspNetCore.Components;
-using MudBlazor;
 
 namespace MauiBlazorClient.Features.Dashboard;
 
 public partial class StartupProfilesWidget
 {
-	[Inject] private IDialogService DialogService { get; set; } = default!;
 	[Inject] private IMediator Mediator { get; set; } = default!;
 	[Inject] private IAppStore AppStore { get; set; } = default!;
 
@@ -28,13 +26,7 @@ public partial class StartupProfilesWidget
 			return;
 		}
 
-		var result  = await Mediator.Send(new LaunchProfileAppsCommand(_selectedOption.Id));
-		if (!result.Success)
-		{
-			var parameters = new DialogParameters<ErrorDialog>();
-			parameters.Add(x => x.ErrorMessage, result.Errors is null ? null : string.Join(Environment.NewLine, result.Errors));
-			var dialog = await DialogService.ShowAsync<ErrorDialog>("Error", parameters, new DialogOptions() { CloseOnEscapeKey = true });
-		}
+		await Mediator.Send(new LaunchProfileAppsCommand(_selectedOption.Id));
 	}
 
 	private void OnSelectedOptionChanged(Model.StartupProfileOption option)
@@ -44,10 +36,7 @@ public partial class StartupProfilesWidget
 	}
 
 	public record GetModelQuery : IRequest<Model>;
-	public record LaunchProfileAppsCommand(string Id) : IRequest<LaunchProfileAppsCommand.Result>
-	{
-		public record Result(bool Success, string[]? Errors = null);
-	}
+	public record LaunchProfileAppsCommand(string Id) : IRequest;
 
 	public record Model
 	{
@@ -72,43 +61,36 @@ public partial class StartupProfilesWidget
 		IStartupProfilesService _startupProfilesService,
 		IAppSetupsService _appSetupsService,
 		IProcessService _processService)
-	: IRequestHandler<LaunchProfileAppsCommand, LaunchProfileAppsCommand.Result>
+	: IRequestHandler<LaunchProfileAppsCommand>
 	{
-		public async Task<LaunchProfileAppsCommand.Result> Handle(LaunchProfileAppsCommand request, CancellationToken cancellationToken)
+		public async Task Handle(LaunchProfileAppsCommand request, CancellationToken cancellationToken)
 		{
 			var profile = await _startupProfilesService.Get(request.Id);
-			return profile?.AppSetupIds?.Any() == true
-				? await LaunchApps(profile.AppSetupIds)
-				: new(Success: true);
+			if (profile?.AppSetupIds?.Any() == true)
+			{
+				await LaunchApps(profile.AppSetupIds);
+			}
 		}
 
-		private async Task<LaunchProfileAppsCommand.Result> LaunchApps(IEnumerable<string> appSetupIds)
+		private async Task LaunchApps(IEnumerable<string> appSetupIds)
 		{
 			var appSetups = await _appSetupsService.GetByIds(appSetupIds.ToArray());
 
 			foreach (var appSetup in appSetups)
 			{
-				var result = await LaunchApp(appSetup.Path, appSetup.Arguments);
-				if (!result.Success)
-				{
-					return result;
-				}
+				await LaunchApp(appSetup);
 			}
-
-			return new(Success: true);
 		}
 
-		private async Task<LaunchProfileAppsCommand.Result> LaunchApp(string appSetupPath, string? appSetupArguments)
+		private async Task LaunchApp(AppSetupDto appSetup)
 		{
 			try
 			{
-				await _processService.Start(appSetupPath, appSetupArguments);
-				return new(Success: true);
+				await _processService.Start(appSetup.Path, appSetup.Arguments);
 			}
 			catch (Exception e)
 			{
-				// Log error
-				return new(Success: false, Errors: [$"Error while trying to start appSetup: '{appSetupPath}'. Details: {e.Message}"]);
+				throw new InvalidOperationException($"Cannot start AppSetup '{appSetup.Name}' with path '{appSetup.Path}'. Details: {e.Message}");
 			}
 		}
 	}

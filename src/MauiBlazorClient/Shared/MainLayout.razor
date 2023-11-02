@@ -20,15 +20,27 @@
 		<NavMenu />
 	</MudDrawer>
 	<MudMainContent>
-		@Body
+		<ErrorBoundary @ref="_errorBoundary">
+			<ChildContent>@Body</ChildContent>
+			<ErrorContent>
+				<ErrorDialog Title="Uh oh. Something went wrong." ErrorMessage="@($"Error: {context.Message}")" />
+			</ErrorContent>
+		</ErrorBoundary>
 	</MudMainContent>
 </MudLayout>
 
 @code {
+	ErrorBoundary? _errorBoundary;
 	private bool _drawerOpen = true;
 	private bool _isDarkMode;
 	private MudThemeProvider _mudThemeProvider = default!;
 	private Color _toggleThemeButtonColor => _isDarkMode ? Color.Inherit : Color.Inherit;
+
+	protected override void OnParametersSet()
+	{
+		// On each page navigation, reset any error state
+		_errorBoundary?.Recover();
+	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
