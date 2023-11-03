@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 using Microsoft.Maui.Platform;
 using MudBlazor.Services;
+using Windows.UI.Popups;
 
 namespace MauiBlazorClient;
 

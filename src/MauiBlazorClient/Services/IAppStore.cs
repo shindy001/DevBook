@@ -26,7 +26,7 @@ namespace MauiBlazorClient.Services
 				var file = File.ReadAllText(DataPath);
 				this.DevBookSettings = JsonSerializer.Deserialize<DevBookSettings>(file) ?? this.DevBookSettings;
 			}
-			this.DashboardData.PropertyChanged += OnDataChanged;
+			this.DashboardData.PropertyChanged += async (s, a) => await OnDataChanged(s, a);
 		}
 
 		public async Task SaveData()
@@ -40,16 +40,23 @@ namespace MauiBlazorClient.Services
 			await File.WriteAllTextAsync(DataPath, json);
 		}
 
-		private void OnDataChanged(object? sender, PropertyChangedEventArgs e)
+		private async Task OnDataChanged(object? sender, PropertyChangedEventArgs e)
 		{
-			_ = SaveData();
+			try
+			{
+				await SaveData();
+			}
+			catch (Exception ex)
+			{
+				// Log error
+			}
 		}
 
 		public void Dispose()
 		{
 			if (DevBookSettings?.DashboardData != null)
 			{
-				this.DashboardData.PropertyChanged -= OnDataChanged;
+				this.DashboardData.PropertyChanged -= async (s, a) => await OnDataChanged(s, a);
 			}
 		}
 	}
