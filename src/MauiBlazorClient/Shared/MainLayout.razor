@@ -8,20 +8,35 @@
 <MudLayout>
 	<MudAppBar Elevation="1">
 		<MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start"
-			OnClick="@((e) => DrawerToggle())" />
+			OnClick="MenuDrawerToggle" />
 		<MudText Typo="Typo.h5" Class="ml-3">Application</MudText>
 		<MudSpacer />
-		<MudIconButton class='@(_isDarkMode ? "d-none" : "")' OnClick="@((e) => ToggleTheme())"
-			Icon="@Icons.Material.Filled.DarkMode" Color="@_toggleThemeButtonColor" Edge="Edge.End" />
-		<MudIconButton class='@(_isDarkMode ? "" : "d-none")' OnClick="@((e) => ToggleTheme())"
-			Icon="@Icons.Material.Filled.LightMode" Color="@_toggleThemeButtonColor" Edge="Edge.End" />
+		<div>
+			<MudTooltip Delay="_tooltipDelayInMs" Text="Toggle Dark Mode" Placement="Placement.Bottom">
+				<MudIconButton Class='@(_isDarkMode ? "d-none" : "")' OnClick="ToggleTheme" Icon="@Icons.Material.Filled.DarkMode" Color="Color.Inherit" />
+			</MudTooltip>
+			<MudTooltip Delay="_tooltipDelayInMs" Text="Toggle Light Mode" Placement="Placement.Bottom">
+				<MudIconButton Class='@(_isDarkMode ? "" : "d-none")' OnClick="ToggleTheme" Icon="@Icons.Material.Filled.LightMode" Color="Color.Inherit" />
+			</MudTooltip>
+			<MudTooltip Delay="_tooltipDelayInMs" Text="Hacker News" Placement="Placement.Bottom">
+				<MudIconButton Icon="@Icons.Material.Filled.Newspaper" OnClick="OpenNewsDrawer" Color="Color.Inherit" />
+			</MudTooltip>
+		</div>
+		
 	</MudAppBar>
-	<MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+	<MudDrawer @bind-Open="_menuDrawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
 		<NavMenu />
 	</MudDrawer>
 	<MudMainContent>
 		<ErrorBoundary @ref="_errorBoundary">
-			<ChildContent>@Body</ChildContent>
+			<ChildContent>
+				<div>
+					@Body
+				</div>
+				<div>
+					<NewsOverlayDrawerWidget @ref="_newsOverlayDrawerWidget" />
+				</div>
+			</ChildContent>
 			<ErrorContent>
 				<ErrorDialog Title="Uh oh. Something went wrong." ErrorMessage="@($"Error: {context.Message}")" />
 			</ErrorContent>
@@ -31,10 +46,11 @@
 
 @code {
 	ErrorBoundary? _errorBoundary;
-	private bool _drawerOpen = true;
+	private bool _menuDrawerOpen = true;
 	private bool _isDarkMode;
 	private MudThemeProvider _mudThemeProvider = default!;
-	private Color _toggleThemeButtonColor => _isDarkMode ? Color.Inherit : Color.Inherit;
+	private NewsOverlayDrawerWidget _newsOverlayDrawerWidget = default!;
+	private double _tooltipDelayInMs = 600;
 
 	protected override void OnParametersSet()
 	{
@@ -56,8 +72,13 @@
 		_isDarkMode = !_isDarkMode;
 	}
 
-	private void DrawerToggle()
+	private void MenuDrawerToggle()
 	{
-		_drawerOpen = !_drawerOpen;
+		_menuDrawerOpen = !_menuDrawerOpen;
+	}
+
+	private void OpenNewsDrawer()
+	{
+		_newsOverlayDrawerWidget.Open();
 	}
 }
