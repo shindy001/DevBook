@@ -45,12 +45,25 @@
 	<ItemGroup>
 		<PackageReference Include="Bogus" Version="34.0.2" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+		<PackageReference Include="Google.Protobuf" Version="3.21.5" />
+		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.49.0" />
+		<PackageReference Include="Grpc.Tools" Version="2.49.0" />
 		<PackageReference Include="MediatR" Version="12.1.1" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0-rc.2.23479.6" />
 		<PackageReference Include="MudBlazor" Version="6.11.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Protobuf Include="..\DevBook.Server\Protos\appSetupsService.proto" GrpcServices="Client" OutputDir="Generated\">
+			<Link>Protos\appSetupsService.proto</Link>
+		</Protobuf>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Generated\" />
 	</ItemGroup>
 
 	<!-- Start tailwindcss.exe in watch mode for hot reload - spawns a new powershell window after build/rebuild -->
