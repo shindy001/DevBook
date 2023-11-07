@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+option csharp_namespace = "DevBook.Grpc";
+package appsetups;
+
+import "google/protobuf/Empty.proto";
+
+service AppSetupsGrpcService {
+  rpc GetAll (GetAllRequest) returns (AppSetups);
+  rpc GetById (GetByIdRequest) returns (AppSetup);
+  rpc Create (CreateRequest) returns (google.protobuf.Empty);
+  rpc Update (UpdateReuqest) returns (google.protobuf.Empty);
+  rpc Delete (DeleteRequest) returns (google.protobuf.Empty);
+}
+
+message AppSetup {
+  string id = 1;
+  string name = 2;
+  string path = 3;
+  optional string arguments = 4; 
+}
+
+message AppSetups {
+  repeated AppSetup items = 1;
+}
+
+message GetAllRequest {}
+
+message GetByIdRequest {
+  string id = 1;
+}
+
+message CreateRequest {
+  string name = 2;
+  string path = 3;
+  optional string arguments = 4; 
+}
+
+message UpdateReuqest {
+  AppSetup item = 1;
+}
+
+message DeleteRequest {
+  string id = 1;
+}
