@@ -57,13 +57,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Protobuf Include="..\DevBook.Server\Protos\appSetupsService.proto" GrpcServices="Client" OutputDir="Generated\">
-			<Link>Protos\appSetupsService.proto</Link>
-		</Protobuf>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Generated\" />
+		<Protobuf Include="..\Protos\appSetupsService.proto" GrpcServices="Client" Link="Protos\appSetupsService.proto" />
 	</ItemGroup>
 
 	<!-- Start tailwindcss.exe in watch mode for hot reload - spawns a new powershell window after build/rebuild -->

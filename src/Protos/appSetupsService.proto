@@ -3,7 +3,7 @@ syntax = "proto3";
 option csharp_namespace = "DevBook.Grpc";
 package appsetups;
 
-import "google/protobuf/Empty.proto";
+import "google/protobuf/empty.proto";
 
 service AppSetupsGrpcService {
   rpc GetAll (GetAllRequest) returns (AppSetups);
