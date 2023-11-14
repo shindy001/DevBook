@@ -9,10 +9,16 @@
 		<MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">Ok</MudButton>
 	</DialogActions>
 </MudDialog>
+
 	@code {
+	[Inject] private NavigationManager NavigationManager { get; set; } = default!;
 	[Parameter] public string Title { get; set; } = "Uh oh. Something went wrong.";
 	[Parameter] public string ErrorMessage { get; set; } = "There was an error.";
 	[Parameter] public bool IsVisible { get; set; } = true;
 
-	void Submit() => IsVisible = false;
+	void Submit()
+	{
+		IsVisible = false;
+		NavigationManager.NavigateTo(NavigationManager.Uri);
+	}
 }
