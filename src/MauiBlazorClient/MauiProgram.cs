@@ -62,7 +62,7 @@ public static class MauiProgram
 
 	private static void RegisterServices(IServiceCollection services)
 	{
-		services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(MauiProgram).Assembly));
+		services.AddCommandsAndQueriesExecutor(typeof(MauiProgram).Assembly);
 
 		services.AddSingleton<IProcessService, ProcessService>();
 		services.AddSingleton<IFilePickerService, FilePickerService>();

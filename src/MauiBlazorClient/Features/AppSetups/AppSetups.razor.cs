@@ -1,6 +1,6 @@
-﻿using MauiBlazorClient.Services;
+﻿using DevBook.Shared.Contracts;
+using MauiBlazorClient.Services;
 using MauiBlazorClient.Shared;
-using MediatR;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
@@ -9,7 +9,7 @@ namespace MauiBlazorClient.Features.AppSetups;
 
 public partial class AppSetups
 {
-	[Inject] private IMediator Mediator { get; set; } = default!;
+	[Inject] private IExecutor Executor { get; set; } = default!;
 	[Inject] private IDialogService DialogService { get; set; } = default!;
 	[Inject] private IFilePickerService FilePickerService { get; set; } = default!;
 
@@ -31,7 +31,7 @@ public partial class AppSetups
 	{
 		_loading = true;
 		StateHasChanged();
-		_model = await Mediator.Send(new GetModelQuery());
+		_model = await Executor.ExecuteQuery(new GetModelQuery());
 		_loading = false;
 	}
 
@@ -71,7 +71,7 @@ public partial class AppSetups
 		await _createOrUpdateForm.Validate();
 		if (_isValidCreateOrUpdateForm)
 		{
-			await Mediator.Send(new CreateOrUpdateCommand { Id = _formIdField, Name = _formNameField, Path = _formPathField, Arguments = _formArgumentsField });
+			await Executor.ExecuteCommand(new CreateOrUpdateCommand { Id = _formIdField, Name = _formNameField, Path = _formPathField, Arguments = _formArgumentsField });
 			await LoadData();
 			_isCreateOrUpdateDialogVisible = false;
 			ResetCreateOrUpdateDialogData();
@@ -87,7 +87,7 @@ public partial class AppSetups
 		var result = await dialog.Result;
 		if (!result.Canceled)
 		{
-			await Mediator.Send(new DeleteCommand(appSetup.Id));
+			await Executor.ExecuteCommand(new DeleteCommand(appSetup.Id));
 			await LoadData();
 		}
 	}
@@ -114,9 +114,9 @@ public partial class AppSetups
 		public record AppSetup(string Id, string Name, string Path, string? Arguments);
 	}
 
-	public record GetModelQuery : IRequest<Model> { }
+	public record GetModelQuery : IQuery<Model> { }
 
-	public record CreateOrUpdateCommand : IRequest
+	public record CreateOrUpdateCommand : ICommand
 	{
 		public string? Id { get; set; }
 		public required string Name { get; set; }
@@ -124,9 +124,9 @@ public partial class AppSetups
 		public string? Arguments { get; set; }
 	}
 
-	public record DeleteCommand(string Id) : IRequest;
+	public record DeleteCommand(string Id) : ICommand;
 
-	public class GetModelQueryHandler(IAppSetupsService _appSetupsService) : IRequestHandler<GetModelQuery, Model>
+	public class GetModelQueryHandler(IAppSetupsService _appSetupsService) : IQueryHandler<GetModelQuery, Model>
 	{
 		public async Task<Model> Handle(GetModelQuery request, CancellationToken cancellationToken)
 		{
@@ -135,7 +135,7 @@ public partial class AppSetups
 		}
 	}
 
-	public class CreateOrUpdateCommandHandler(IAppSetupsService _appSetupsService) : IRequestHandler<CreateOrUpdateCommand>
+	public class CreateOrUpdateCommandHandler(IAppSetupsService _appSetupsService) : ICommandHandler<CreateOrUpdateCommand>
 	{
 		public async Task Handle(CreateOrUpdateCommand request, CancellationToken cancellationToken)
 		{
@@ -150,7 +150,7 @@ public partial class AppSetups
 		}
 	}
 
-	public class DeleteCommandHandler(IAppSetupsService _appSetupsService) : IRequestHandler<DeleteCommand>
+	public class DeleteCommandHandler(IAppSetupsService _appSetupsService) : ICommandHandler<DeleteCommand>
 	{
 		public async Task Handle(DeleteCommand request, CancellationToken cancellationToken)
 		{

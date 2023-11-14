@@ -1,6 +1,6 @@
-﻿using MauiBlazorClient.Services;
+﻿using DevBook.Shared.Contracts;
+using MauiBlazorClient.Services;
 using MauiBlazorClient.Shared;
-using MediatR;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
@@ -9,7 +9,7 @@ namespace MauiBlazorClient.Features.StartupProfiles;
 
 public partial class StartupProfiles
 {
-	[Inject] private IMediator Mediator { get; set; } = default!;
+	[Inject] private IExecutor Executor { get; set; } = default!;
 	[Inject] private IDialogService DialogService { get; set; } = default!;
 
 	private Model _model = new();
@@ -29,7 +29,7 @@ public partial class StartupProfiles
 	{
 		_loading = true;
 		StateHasChanged();
-		_model = await Mediator.Send(new GetModelQuery());
+		_model = await Executor.ExecuteQuery(new GetModelQuery());
 		_loading = false;
 	}
 
@@ -67,7 +67,7 @@ public partial class StartupProfiles
 		await _createOrUpdateForm.Validate();
 		if (_isValidCreateOrUpdateForm)
 		{
-			await Mediator.Send(new CreateOrUpdateCommand { Id = _formIdField, Name = _formNameField, AppSetupIds = _selectedAppSetups.Select(x => x.Id).ToList() });
+			await Executor.ExecuteCommand(new CreateOrUpdateCommand { Id = _formIdField, Name = _formNameField, AppSetupIds = _selectedAppSetups.Select(x => x.Id).ToList() });
 			await LoadData();
 			_isCreateOrUpdateDialogVisible = false;
 			ResetCreateOrUpdateDialogData();
@@ -83,7 +83,7 @@ public partial class StartupProfiles
 		var result = await dialog.Result;
 		if (!result.Canceled)
 		{
-			await Mediator.Send(new DeleteCommand(startupProfile.Id));
+			await Executor.ExecuteCommand(new DeleteCommand(startupProfile.Id));
 			await LoadData();
 		}
 	}
@@ -94,16 +94,16 @@ public partial class StartupProfiles
 		ResetCreateOrUpdateDialogData();
 	}
 
-	public class GetModelQuery : IRequest<Model> { }
+	public class GetModelQuery : IQuery<Model> { }
 
-	public record CreateOrUpdateCommand : IRequest
+	public record CreateOrUpdateCommand : ICommand
 	{
 		public string? Id { get; set; }
 		public required string Name { get; set; }
 		public List<string> AppSetupIds { get; set; } = [];
 	}
 
-	public record DeleteCommand(string Id) : IRequest;
+	public record DeleteCommand(string Id) : ICommand;
 
 	public class Model
 	{
@@ -119,7 +119,7 @@ public partial class StartupProfiles
 
 	public class GetModelQueryHandler(
 		IAppSetupsService _appSetupsService,
-		IStartupProfilesService _startupProfilesService) : IRequestHandler<GetModelQuery, Model>
+		IStartupProfilesService _startupProfilesService) : IQueryHandler<GetModelQuery, Model>
 	{
 		public async Task<Model> Handle(GetModelQuery request, CancellationToken cancellationToken)
 		{
@@ -137,7 +137,8 @@ public partial class StartupProfiles
 		}
 	}
 
-	public class CreateOrUpdateCommandHandler(IStartupProfilesService _startupProfilesService) : IRequestHandler<CreateOrUpdateCommand>
+	public class CreateOrUpdateCommandHandler(IStartupProfilesService _startupProfilesService)
+		: ICommandHandler<CreateOrUpdateCommand>
 	{
 		public async Task Handle(CreateOrUpdateCommand request, CancellationToken cancellationToken)
 		{
@@ -152,7 +153,8 @@ public partial class StartupProfiles
 		}
 	}
 
-	public class DeleteCommandHandler(IStartupProfilesService _startupProfilesService) : IRequestHandler<DeleteCommand>
+	public class DeleteCommandHandler(IStartupProfilesService _startupProfilesService)
+		: ICommandHandler<DeleteCommand>
 	{
 		public async Task Handle(DeleteCommand request, CancellationToken cancellationToken)
 		{

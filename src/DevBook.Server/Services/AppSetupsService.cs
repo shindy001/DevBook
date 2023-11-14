@@ -4,9 +4,10 @@ using Grpc.Core;
 
 namespace DevBook.Server.Services;
 
-public class AppSetupsService : AppSetupsGrpcService.AppSetupsGrpcServiceBase
+internal sealed class AppSetupsService : AppSetupsGrpcService.AppSetupsGrpcServiceBase
 {
 	private readonly ILogger<AppSetupsService> _logger;
+
 	public AppSetupsService(ILogger<AppSetupsService> logger)
 	{
 		_logger = logger;

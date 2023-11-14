@@ -6,7 +6,7 @@ builder.Logging.AddDevBookLogging();
 
 builder.Services.AddGrpc();
 builder.Services.AddGrpcReflection();
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+builder.Services.AddCommandsAndQueriesExecutor(typeof(Program).Assembly);
 
 var app = builder.Build();
 
