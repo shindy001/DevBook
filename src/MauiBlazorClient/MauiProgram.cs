@@ -1,4 +1,5 @@
-﻿using MauiBlazorClient.Services;
+﻿using DevBook.Shared;
+using MauiBlazorClient.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 using Microsoft.Maui.Platform;
@@ -27,6 +28,8 @@ public static class MauiProgram
 #endif
 
 #if WINDOWS
+		builder.Services.AddLogging(b => b.AddDevBookLogging());
+
 		builder.ConfigureLifecycleEvents(events =>
 		{
 			events.AddWindows(windowLifecycleBuilder =>

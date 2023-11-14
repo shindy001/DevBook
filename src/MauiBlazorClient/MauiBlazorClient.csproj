@@ -57,6 +57,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\DevBook.Shared\DevBook.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Protobuf Include="..\Protos\appSetupsService.proto" GrpcServices="Client" Link="Protos\appSetupsService.proto" />
 	</ItemGroup>
 

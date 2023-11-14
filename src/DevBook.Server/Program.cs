@@ -1,11 +1,12 @@
 using DevBook.Server.Services;
+using DevBook.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.AddDevBookLogging();
 
 builder.Services.AddGrpc();
 builder.Services.AddGrpcReflection();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
-
 
 var app = builder.Build();
 
