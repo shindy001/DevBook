@@ -6,28 +6,32 @@ package appsetups;
 import "google/protobuf/empty.proto";
 
 service AppSetupsGrpcService {
-  rpc GetAll (GetAllRequest) returns (AppSetups);
-  rpc GetById (GetByIdRequest) returns (AppSetup);
+  rpc GetAll (GetAllRequest) returns (GetAllResponse);
+  rpc GetById (GetByIdRequest) returns (GetByIdResponse);
   rpc Create (CreateRequest) returns (google.protobuf.Empty);
-  rpc Update (UpdateReuqest) returns (google.protobuf.Empty);
+  rpc Update (UpdateRequest) returns (google.protobuf.Empty);
   rpc Delete (DeleteRequest) returns (google.protobuf.Empty);
 }
 
-message AppSetup {
+message AppSetupDto {
   string id = 1;
   string name = 2;
   string path = 3;
   optional string arguments = 4; 
 }
 
-message AppSetups {
-  repeated AppSetup items = 1;
-}
-
 message GetAllRequest {}
+
+message GetAllResponse {
+  repeated AppSetupDto items = 1;
+}
 
 message GetByIdRequest {
   string id = 1;
+}
+
+message GetByIdResponse {
+  AppSetupDto appSetup = 1;
 }
 
 message CreateRequest {
@@ -36,8 +40,8 @@ message CreateRequest {
   optional string arguments = 4; 
 }
 
-message UpdateReuqest {
-  AppSetup item = 1;
+message UpdateRequest {
+  AppSetupDto item = 1;
 }
 
 message DeleteRequest {
