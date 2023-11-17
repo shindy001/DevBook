@@ -2,6 +2,11 @@
 
 namespace DevBook.Shared.Contracts;
 
-public interface ICommand : IRequest;
+/// <summary>
+/// Marker interface
+/// </summary>
+public interface ICommandBase;
 
-public interface ICommand<out TResult> : IRequest<TResult>;
+public interface ICommand : ICommandBase, IRequest;
+
+public interface ICommand<out TResult> : ICommandBase, IRequest<TResult>;

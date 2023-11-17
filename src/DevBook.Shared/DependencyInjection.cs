@@ -1,4 +1,5 @@
 ﻿using DevBook.Shared.Contracts;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -11,6 +12,13 @@ public static class DependencyInjection
 		services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(assemblies));
 
 		services.AddScoped<IExecutor, Executor>();
+
+		return services;
+	}
+
+	public static IServiceCollection AddPipelineBehavior(this IServiceCollection services, Type pipelineBehavior)
+	{
+		services.AddScoped(typeof(IPipelineBehavior<,>), pipelineBehavior);
 
 		return services;
 	}
