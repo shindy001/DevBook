@@ -12,9 +12,9 @@ internal sealed class AppSetupsService(IExecutor _executor) : AppSetupsGrpcServi
 		return await _executor.ExecuteQuery(new GetAppSetups());
 	}
 
-	public override Task<GetByIdResponse> GetById(GetByIdRequest request, ServerCallContext context)
+	public override async Task<GetByIdResponse> GetById(GetByIdRequest request, ServerCallContext context)
 	{
-		return base.GetById(request, context);
+		return await _executor.ExecuteQuery(new GetAppSetup(request.Id));
 	}
 
 	public override Task<Empty> Create(CreateRequest request, ServerCallContext context)
