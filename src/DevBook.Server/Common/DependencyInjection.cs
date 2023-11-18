@@ -16,8 +16,9 @@ internal static class DependencyInjection
 			o => o.UseSqlite(GetSqliteConnectionString(),
 			b => b.MigrationsAssembly(assembly.GetName().Name)));
 
-		services.AddTransient<IUnitOfWork, UnitOfWork>();
+		services.AddScoped<IUnitOfWork, UnitOfWork>();
 		services.AddPipelineBehavior(typeof(UnitOfWorkCommandPipelineBehavior<,>));
+		services.AddPipelineBehavior(typeof(UnitOfWorkQueryPipelineBehavior<,>));
 
 		return services;
 	}
@@ -37,7 +38,7 @@ internal static class DependencyInjection
 
 	private static string GetSqliteConnectionString()
 	{
-		var appData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+		var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 		var dbPath = Path.Combine(appData, "DevBook", $"DevBook.db");
 
 		if (!Directory.Exists(dbPath))

@@ -2,5 +2,6 @@
 
 public interface IUnitOfWork
 {
+	void AsNoTrackingQuery();
 	Task<int> CommitAsync(CancellationToken cancellationToken = default);
 }
