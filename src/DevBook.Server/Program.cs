@@ -1,9 +1,10 @@
+using DevBook.Server.Common;
 using DevBook.Server.Features.Profiles;
 using DevBook.Server.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddGrpc();
+builder.Services.AddGrpc(cfg => cfg.Interceptors.Add<GrpgGlobalExceptionInterceptor>());
 builder.Services.AddGrpcReflection();
 
 builder.Services.AddInfrastructure();
