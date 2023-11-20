@@ -3,7 +3,7 @@ using DevBook.Shared.Contracts;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 
-namespace DevBook.Server.Features.Profiles;
+namespace DevBook.Server.Features.AppSetups;
 
 internal sealed class AppSetupsService(IExecutor _executor) : AppSetupsGrpcService.AppSetupsGrpcServiceBase
 {
@@ -20,10 +20,10 @@ internal sealed class AppSetupsService(IExecutor _executor) : AppSetupsGrpcServi
 			_ => throw new RpcException(new Status(StatusCode.NotFound, $"Item with id '{request.Id}' not found.")));
 	}
 
-	public override Task<Empty> Create(CreateRequest request, ServerCallContext context)
+	public override async Task<Empty> Create(CreateRequest request, ServerCallContext context)
 	{
-		throw new Exception("karel");
-		return base.Create(request, context);
+		await _executor.ExecuteCommand(new CreateAppSetup(request.Name, request.Path, request.Arguments));
+		return new Empty();
 	}
 
 	public override Task<Empty> Update(UpdateRequest request, ServerCallContext context)

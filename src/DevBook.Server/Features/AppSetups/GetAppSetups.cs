@@ -2,7 +2,7 @@
 using DevBook.Server.Infrastructure;
 using DevBook.Shared.Contracts;
 
-namespace DevBook.Server.Features.Profiles;
+namespace DevBook.Server.Features.AppSetups;
 
 internal class GetAppSetups : IQuery<GetAllResponse>;
 

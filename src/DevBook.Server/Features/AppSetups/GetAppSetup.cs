@@ -4,7 +4,7 @@ using DevBook.Shared.Contracts;
 using OneOf;
 using OneOf.Types;
 
-namespace DevBook.Server.Features.Profiles;
+namespace DevBook.Server.Features.AppSetups;
 
 internal record GetAppSetup(string Id) : IQuery<OneOf<GetByIdResponse, NotFound>>;
 

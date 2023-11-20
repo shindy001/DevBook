@@ -1,5 +1,5 @@
 using DevBook.Server.Common;
-using DevBook.Server.Features.Profiles;
+using DevBook.Server.Features.AppSetups;
 using DevBook.Server.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
