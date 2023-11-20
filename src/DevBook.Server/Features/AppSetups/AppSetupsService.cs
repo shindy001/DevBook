@@ -26,9 +26,12 @@ internal sealed class AppSetupsService(IExecutor _executor) : AppSetupsGrpcServi
 		return new Empty();
 	}
 
-	public override Task<Empty> Update(UpdateRequest request, ServerCallContext context)
+	public override async Task<Empty> Update(UpdateRequest request, ServerCallContext context)
 	{
-		return base.Update(request, context);
+		var result = await _executor.ExecuteCommand(new UpdateAppSetup(request.Item.Id, request.Item.Name, request.Item.Path, request.Item.Arguments));
+		return result.Match(
+			success => new Empty(),
+			_ => throw new RpcException(new Status(StatusCode.NotFound, $"Item with id '{request.Item.Id}' not found.")));
 	}
 
 	public override Task<Empty> Delete(DeleteRequest request, ServerCallContext context)
