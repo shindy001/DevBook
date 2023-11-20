@@ -14,11 +14,15 @@ internal sealed class AppSetupsService(IExecutor _executor) : AppSetupsGrpcServi
 
 	public override async Task<GetByIdResponse> GetById(GetByIdRequest request, ServerCallContext context)
 	{
-		return await _executor.ExecuteQuery(new GetAppSetup(request.Id));
+		var response = await _executor.ExecuteQuery(new GetAppSetup(request.Id));
+		return response.Match(
+			response => response,
+			_ => throw new RpcException(new Status(StatusCode.NotFound, $"Item with id '{request.Id}' not found.")));
 	}
 
 	public override Task<Empty> Create(CreateRequest request, ServerCallContext context)
 	{
+		throw new Exception("karel");
 		return base.Create(request, context);
 	}
 

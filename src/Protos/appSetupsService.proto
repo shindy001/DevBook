@@ -31,10 +31,7 @@ message GetByIdRequest {
 }
 
 message GetByIdResponse {
-  oneof result {
-	  AppSetupDto appSetup = 1;
-	  string message = 2;
-  }
+  AppSetupDto appSetup = 1;
 }
 
 message CreateRequest {
