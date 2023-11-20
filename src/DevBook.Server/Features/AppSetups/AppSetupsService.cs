@@ -34,8 +34,9 @@ internal sealed class AppSetupsService(IExecutor _executor) : AppSetupsGrpcServi
 			_ => throw new RpcException(new Status(StatusCode.NotFound, $"Item with id '{request.Item.Id}' not found.")));
 	}
 
-	public override Task<Empty> Delete(DeleteRequest request, ServerCallContext context)
+	public override async Task<Empty> Delete(DeleteRequest request, ServerCallContext context)
 	{
-		return base.Delete(request, context);
+		await _executor.ExecuteCommand(new DeleteAppSetup(request.Id));
+		return new Empty();
 	}
 }
