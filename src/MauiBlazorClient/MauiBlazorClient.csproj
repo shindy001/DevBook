@@ -60,7 +60,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Protobuf Include="..\Protos\appSetupsService.proto" GrpcServices="Client" Link="Protos\appSetupsService.proto" />
+		<Protobuf Include="..\Protos\**\*.proto" GrpcServices="Client" />
+		<Content Include="@(Protobuf)" LinkBase="Protos" />
 	</ItemGroup>
 
 	<Target Name="RunTailwindGen" AfterTargets="BeforePublish">

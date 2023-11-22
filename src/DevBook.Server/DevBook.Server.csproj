@@ -8,7 +8,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Protobuf Include="..\Protos\appSetupsService.proto" GrpcServices="Server" Link="Protos\appSetupsService.proto" />
+		<Protobuf Include="..\Protos\**\*.proto" GrpcServices="Server" />
+		<Content Include="@(Protobuf)" LinkBase="Protos" />
 	</ItemGroup>
 
 	<ItemGroup>
