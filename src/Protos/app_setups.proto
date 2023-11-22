@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-option csharp_namespace = "DevBook.Grpc";
-package appsetups;
+option csharp_namespace = "DevBook.Grpc.AppSetups";
+package app_setups;
 
 import "google/protobuf/empty.proto";
 
@@ -31,17 +31,20 @@ message GetByIdRequest {
 }
 
 message GetByIdResponse {
-  AppSetupDto appSetup = 1;
+  AppSetupDto item = 1;
 }
 
 message CreateRequest {
-  string name = 2;
-  string path = 3;
-  optional string arguments = 4; 
+  string name = 1;
+  string path = 2;
+  optional string arguments = 3; 
 }
 
 message UpdateRequest {
-  AppSetupDto item = 1;
+  string id = 1;
+  string name = 2;
+  string path = 3;
+  optional string arguments = 4; 
 }
 
 message DeleteRequest {
