@@ -13,7 +13,10 @@ internal sealed class GrpgGlobalExceptionInterceptor(ILogger<GrpgGlobalException
 		{
 			return await base.UnaryServerHandler(request, context, continuation);
 		}
-		// Only catch internal server exception, rpc ex should be handled by default
+		catch(CommandValidationException e)
+		{
+			throw new RpcException(new Status(StatusCode.InvalidArgument, e.Message), CreateTrailers(e.Errors));
+		}
 		catch (Exception e) when (e is not RpcException)
 		{
 			_logger.LogError(e, "Internal server error");
@@ -27,5 +30,17 @@ internal sealed class GrpgGlobalExceptionInterceptor(ILogger<GrpgGlobalException
 				throw new RpcException(new Status(StatusCode.Internal, $"Internal server error. Please try again later."));
 			}
 		}
+
 	}
+
+	private static Metadata CreateTrailers(IDictionary<string, string> errors)
+	{
+		var trailers = new Metadata();
+		foreach(var error in errors)
+		{
+			trailers.Add(error.Key, error.Value);
+		}
+		return trailers;
+	}
+
 }

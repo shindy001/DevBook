@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using DevBook.Shared;
 using DevBook.Shared.Contracts;
+using DevBook.Server.Common;
+using FluentValidation;
 
 namespace DevBook.Server.Infrastructure;
 
@@ -17,6 +19,8 @@ internal static class DependencyInjection
 			b => b.MigrationsAssembly(assembly.GetName().Name)));
 
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
+		services.AddValidatorsFromAssembly(assembly);
+		services.AddPipelineBehavior(typeof(CommandValidationPipelineBehavior<,>));
 		services.AddPipelineBehavior(typeof(UnitOfWorkCommandPipelineBehavior<,>));
 		services.AddPipelineBehavior(typeof(UnitOfWorkQueryPipelineBehavior<,>));
 
