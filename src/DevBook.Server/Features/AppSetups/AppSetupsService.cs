@@ -9,7 +9,7 @@ internal sealed class AppSetupsService(IExecutor _executor) : AppSetupsGrpcServi
 {
 	public override async Task<GetAllResponse> GetAll(GetAllRequest request, ServerCallContext context)
 	{
-		var appSetups = await _executor.ExecuteQuery(new GetAppSetups());
+		var appSetups = await _executor.ExecuteQuery(new GetAppSetupsQuery());
 		var response = new GetAllResponse();
 		response.Items.Add(appSetups.Select(AppSetupMapper.ToDto));
 		return response;
@@ -17,7 +17,7 @@ internal sealed class AppSetupsService(IExecutor _executor) : AppSetupsGrpcServi
 
 	public override async Task<GetByIdResponse> GetById(GetByIdRequest request, ServerCallContext context)
 	{
-		var result = await _executor.ExecuteQuery(new GetAppSetup(request.Id));
+		var result = await _executor.ExecuteQuery(new GetAppSetupQuery(request.Id));
 		return result.Match(
 			appSetup => new GetByIdResponse { Item = AppSetupMapper.ToDto(appSetup) },
 			_ => throw new RpcException(new Status(StatusCode.NotFound, $"Item with id '{request.Id}' not found.")));
@@ -25,13 +25,13 @@ internal sealed class AppSetupsService(IExecutor _executor) : AppSetupsGrpcServi
 
 	public override async Task<Empty> Create(CreateRequest request, ServerCallContext context)
 	{
-		await _executor.ExecuteCommand(new CreateAppSetup(request.Name, request.Path, request.Arguments));
+		await _executor.ExecuteCommand(new CreateAppSetupCommand(request.Name, request.Path, request.Arguments));
 		return new Empty();
 	}
 
 	public override async Task<Empty> Update(UpdateRequest request, ServerCallContext context)
 	{
-		var result = await _executor.ExecuteCommand(new UpdateAppSetup(request.Id, request.Name, request.Path, request.Arguments));
+		var result = await _executor.ExecuteCommand(new UpdateAppSetupCommand(request.Id, request.Name, request.Path, request.Arguments));
 		return result.Match(
 			success => new Empty(),
 			_ => throw new RpcException(new Status(StatusCode.NotFound, $"Item with id '{request.Id}' not found.")));
@@ -39,7 +39,7 @@ internal sealed class AppSetupsService(IExecutor _executor) : AppSetupsGrpcServi
 
 	public override async Task<Empty> Delete(DeleteRequest request, ServerCallContext context)
 	{
-		await _executor.ExecuteCommand(new DeleteAppSetup(request.Id));
+		await _executor.ExecuteCommand(new DeleteAppSetupCommand(request.Id));
 		return new Empty();
 	}
 }

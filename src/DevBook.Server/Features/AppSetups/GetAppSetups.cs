@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevBook.Server.Features.AppSetups;
 
-internal class GetAppSetups : IQuery<IEnumerable<AppSetup>>;
+internal sealed record GetAppSetupsQuery : IQuery<IEnumerable<AppSetup>>;
 
-internal class GetAppSetupsHandler(DevBookDbContext _dbContext) : IQueryHandler<GetAppSetups, IEnumerable<AppSetup>>
+internal sealed class GetAppSetupsQueryHandler(DevBookDbContext _dbContext) : IQueryHandler<GetAppSetupsQuery, IEnumerable<AppSetup>>
 {
-	public async Task<IEnumerable<AppSetup>> Handle(GetAppSetups request, CancellationToken cancellationToken)
+	public async Task<IEnumerable<AppSetup>> Handle(GetAppSetupsQuery request, CancellationToken cancellationToken)
 	{
 		return await _dbContext.AppSetups.ToListAsync();
 	}
