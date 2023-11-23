@@ -1,4 +1,5 @@
-﻿using DevBook.Server.Infrastructure;
+﻿using DevBook.Server.Common;
+using DevBook.Server.Infrastructure;
 using DevBook.Shared.Contracts;
 using FluentValidation;
 using OneOf;
@@ -17,14 +18,9 @@ public sealed class UpdateAppSetupCommandValidator : AbstractValidator<UpdateApp
 {
 	public UpdateAppSetupCommandValidator()
 	{
-		RuleFor(x => x.Id).Must(IsValidId).WithMessage("Invalid Id value '{PropertyValue}'");
+		RuleFor(x => x.Id).IsValidId();
 		RuleFor(x => x.Name).NotEmpty();
 		RuleFor(x => x.Path).NotEmpty();
-	}
-
-	private static bool IsValidId(string id)
-	{
-		return Guid.TryParse(id, out _);
 	}
 }
 
