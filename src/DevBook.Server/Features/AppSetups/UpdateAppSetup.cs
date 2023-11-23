@@ -1,20 +1,36 @@
 ﻿using DevBook.Server.Infrastructure;
 using DevBook.Shared.Contracts;
+using FluentValidation;
 using OneOf;
 using OneOf.Types;
 
 namespace DevBook.Server.Features.AppSetups;
 
-internal record UpdateAppSetup(
+public sealed record UpdateAppSetupCommand(
 	string Id,
 	string Name,
 	string Path,
 	string? Arguments)
 	: ICommand<OneOf<Success, NotFound>>;
 
-internal class UpdateAppSetupHandler(DevBookDbContext _dbContext) : ICommandHandler<UpdateAppSetup, OneOf<Success, NotFound>>
+public sealed class UpdateAppSetupCommandValidator : AbstractValidator<UpdateAppSetupCommand>
 {
-	public async Task<OneOf<Success, NotFound>> Handle(UpdateAppSetup request, CancellationToken cancellationToken)
+	public UpdateAppSetupCommandValidator()
+	{
+		RuleFor(x => x.Id).Must(IsValidId).WithMessage("Invalid Id value '{PropertyValue}'");
+		RuleFor(x => x.Name).NotEmpty();
+		RuleFor(x => x.Path).NotEmpty();
+	}
+
+	private static bool IsValidId(string id)
+	{
+		return Guid.TryParse(id, out _);
+	}
+}
+
+internal sealed class UpdateAppSetupCommandHandler(DevBookDbContext _dbContext) : ICommandHandler<UpdateAppSetupCommand, OneOf<Success, NotFound>>
+{
+	public async Task<OneOf<Success, NotFound>> Handle(UpdateAppSetupCommand request, CancellationToken cancellationToken)
 	{
 		var existingItem = await _dbContext.AppSetups.FindAsync(Guid.Parse(request.Id));
 		if (existingItem is not null)
