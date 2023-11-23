@@ -1,4 +1,5 @@
 using DevBook.Grpc.AppSetups;
+using DevBook.Server.Common;
 using DevBook.Shared.Contracts;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
@@ -20,7 +21,7 @@ internal sealed class AppSetupsService(IExecutor _executor) : AppSetupsGrpcServi
 		var result = await _executor.ExecuteQuery(new GetAppSetupQuery(request.Id));
 		return result.Match(
 			appSetup => new GetByIdResponse { Item = AppSetupMapper.ToDto(appSetup) },
-			_ => throw new RpcException(new Status(StatusCode.NotFound, $"Item with id '{request.Id}' not found.")));
+			_ => throw RpcExceptions.NotFound(request.Id));
 	}
 
 	public override async Task<Empty> Create(CreateRequest request, ServerCallContext context)
@@ -34,7 +35,15 @@ internal sealed class AppSetupsService(IExecutor _executor) : AppSetupsGrpcServi
 		var result = await _executor.ExecuteCommand(new UpdateAppSetupCommand(request.Id, request.Name, request.Path, request.Arguments));
 		return result.Match(
 			success => new Empty(),
-			_ => throw new RpcException(new Status(StatusCode.NotFound, $"Item with id '{request.Id}' not found.")));
+			_ => throw RpcExceptions.NotFound(request.Id));
+	}
+
+	public override async Task<Empty> Patch(PatchRequest request, ServerCallContext context)
+	{
+		var result = await _executor.ExecuteCommand(new PatchAppSetupCommand(request.Id, request.Name, request.Path, request.Arguments));
+		return result.Match(
+			success => new Empty(),
+			_ => throw RpcExceptions.NotFound(request.Id));
 	}
 
 	public override async Task<Empty> Delete(DeleteRequest request, ServerCallContext context)
