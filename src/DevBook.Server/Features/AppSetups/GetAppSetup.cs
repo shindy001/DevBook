@@ -11,7 +11,11 @@ internal sealed class GetAppSetupQueryHandler(DevBookDbContext _dbContext) : IQu
 {
 	public async Task<OneOf<AppSetup, NotFound>> Handle(GetAppSetupQuery request, CancellationToken cancellationToken)
 	{
-		var appSetup = await _dbContext.AppSetups.FindAsync([Guid.Parse(request.Id)], cancellationToken: cancellationToken);
+		AppSetup? appSetup = null;
+		if (Guid.TryParse(request.Id, out var guid))
+		{
+			appSetup = await _dbContext.AppSetups.FindAsync([guid], cancellationToken: cancellationToken);
+		}
 
 		return appSetup is null
 			? new NotFound()
