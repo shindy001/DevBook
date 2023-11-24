@@ -1,6 +1,5 @@
 ﻿using DevBook.Shared.Contracts;
 using MauiBlazorClient.Services;
-using MauiBlazorClient.Services.DTO;
 using Microsoft.AspNetCore.Components;
 
 namespace MauiBlazorClient.Features.Dashboard;
@@ -79,19 +78,19 @@ public partial class StartupProfilesWidget
 
 			foreach (var appSetup in appSetups)
 			{
-				await LaunchApp(appSetup);
+				await LaunchApp(appSetup.Name, appSetup.Path, appSetup.Arguments);
 			}
 		}
 
-		private async Task LaunchApp(AppSetupDto appSetup)
+		private async Task LaunchApp(string name, string path, string arguments)
 		{
 			try
 			{
-				await _processService.Start(appSetup.Path, appSetup.Arguments);
+				await _processService.Start(path, arguments);
 			}
 			catch (Exception e)
 			{
-				throw new InvalidOperationException($"Cannot start AppSetup '{appSetup.Name}' with path '{appSetup.Path}'. Details: {e.Message}");
+				throw new InvalidOperationException($"Cannot start AppSetup '{name}' with path '{path}'. Details: {e.Message}");
 			}
 		}
 	}

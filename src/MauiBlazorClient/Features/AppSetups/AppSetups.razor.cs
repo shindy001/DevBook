@@ -130,7 +130,7 @@ public partial class AppSetups
 	{
 		public async Task<Model> Handle(GetModelQuery request, CancellationToken cancellationToken)
 		{
-			var appSetupDtos = await _appSetupsService.List();
+			var appSetupDtos = await _appSetupsService.GetAll();
 			return new Model { AppSetups = appSetupDtos.Select(x => new Model.AppSetup(x.Id, x.Name, x.Path, x.Arguments)).ToList() };
 		}
 	}

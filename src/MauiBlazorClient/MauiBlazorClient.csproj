@@ -60,8 +60,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Protobuf Include="..\Protos\**\*.proto" GrpcServices="Client" />
+		<Protobuf Include="..\Protos\**\*.proto" GrpcServices="Client" OutputDir="Generated\" />
 		<Content Include="@(Protobuf)" LinkBase="Protos" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Generated\" />
 	</ItemGroup>
 
 	<Target Name="RunTailwindGen" AfterTargets="BeforePublish">

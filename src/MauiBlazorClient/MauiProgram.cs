@@ -1,4 +1,5 @@
-﻿using DevBook.Shared;
+﻿using DevBook.Grpc.AppSetups;
+using DevBook.Shared;
 using MauiBlazorClient.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
@@ -9,6 +10,9 @@ namespace MauiBlazorClient;
 
 public static class MauiProgram
 {
+	// Should be set on host env, otherwise falls back to localhost address
+	internal static readonly string GrpcServerAddress = Environment.GetEnvironmentVariable("DEVBOOK_GRPC_ADDRESS") ?? "https://localhost:5112";
+
 	public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
@@ -66,6 +70,11 @@ public static class MauiProgram
 
 		services.AddSingleton<IProcessService, ProcessService>();
 		services.AddSingleton<IFilePickerService, FilePickerService>();
+
+		services.AddGrpcClient<AppSetupsGrpcService.AppSetupsGrpcServiceClient>(o =>
+		{
+			o.Address = new Uri(GrpcServerAddress);
+		});
 
 		services.AddSingleton<IAppSetupsService, AppSetupsService>();
 		services.AddSingleton<IStartupProfilesService, StartupProfilesService>();

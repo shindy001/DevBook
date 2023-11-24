@@ -124,7 +124,7 @@ public partial class StartupProfiles
 		public async Task<Model> Handle(GetModelQuery request, CancellationToken cancellationToken)
 		{
 			var startupProfileDtos = await _startupProfilesService.List();
-			var appSetupDtos = await _appSetupsService.List();
+			var appSetupDtos = await _appSetupsService.GetAll();
 			var availableAppSetups = appSetupDtos?.Select(x => new Model.AvailableAppSetup(x.Id, x.Name)) ?? [];
 			var model = new Model { StartupProfiles = [], AvailableAppSetups = availableAppSetups.ToList() };
 
