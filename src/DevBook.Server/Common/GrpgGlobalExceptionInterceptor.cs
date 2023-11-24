@@ -1,5 +1,6 @@
 ﻿using Grpc.Core;
 using Grpc.Core.Interceptors;
+using System.Text.Json;
 
 namespace DevBook.Server.Common;
 
@@ -15,7 +16,7 @@ internal sealed class GrpgGlobalExceptionInterceptor(ILogger<GrpgGlobalException
 		}
 		catch(CommandValidationException e)
 		{
-			throw new RpcException(new Status(StatusCode.InvalidArgument, e.Message), CreateTrailers(e.Errors));
+			throw new RpcException(new Status(StatusCode.InvalidArgument, JsonSerializer.Serialize(e.Errors)));
 		}
 		catch (Exception e) when (e is not RpcException)
 		{
@@ -32,15 +33,4 @@ internal sealed class GrpgGlobalExceptionInterceptor(ILogger<GrpgGlobalException
 		}
 
 	}
-
-	private static Metadata CreateTrailers(IDictionary<string, string> errors)
-	{
-		var trailers = new Metadata();
-		foreach(var error in errors)
-		{
-			trailers.Add(error.Key, error.Value);
-		}
-		return trailers;
-	}
-
 }

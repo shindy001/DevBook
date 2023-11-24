@@ -1,4 +1,5 @@
-﻿using DevBook.Server.Infrastructure;
+﻿using DevBook.Server.Common;
+using DevBook.Server.Infrastructure;
 using DevBook.Shared.Contracts;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,7 @@ public sealed class CreateStartupProfileCommandValidator : AbstractValidator<Cre
 	public CreateStartupProfileCommandValidator()
 	{
 		RuleFor(x => x.Name).NotEmpty();
-		RuleFor(x => x.AppSetupIds).Must(x => x.All(x => Guid.TryParse(x, out _)));
+		RuleForEach(x => x.AppSetupIds).IsValidId();
 	}
 }
 

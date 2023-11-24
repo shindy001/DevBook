@@ -19,7 +19,7 @@ public sealed class PatchStartupProfileCommandValidator : AbstractValidator<Patc
 	public PatchStartupProfileCommandValidator()
 	{
 		RuleFor(x => x.Id).IsValidId();
-		RuleFor(x => x.AppSetupIds).Must(x => x.All(x => Guid.TryParse(x, out _)));
+		RuleForEach(x => x.AppSetupIds).IsValidId();
 	}
 }
 

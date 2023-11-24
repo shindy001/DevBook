@@ -20,7 +20,7 @@ public sealed class UpdateStartupProfileCommandValidator : AbstractValidator<Upd
 	{
 		RuleFor(x => x.Id).IsValidId();
 		RuleFor(x => x.Name).NotEmpty();
-		RuleFor(x => x.AppSetupIds).Must(x => x.All(x => Guid.TryParse(x, out _)));
+		RuleForEach(x => x.AppSetupIds).IsValidId();
 	}
 }
 
