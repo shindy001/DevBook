@@ -52,7 +52,7 @@ public partial class StartupProfilesWidget
 	{
 		public async Task<Model> Handle(GetModelQuery request, CancellationToken cancellationToken)
 		{
-			var startupProfileDtos = await _startupProfilesService.List();
+			var startupProfileDtos = await _startupProfilesService.GetAll();
 			return new Model { StartupProfileOptions = startupProfileDtos?.Select(x => new Model.StartupProfileOption(x.Id, x.Name)).ToList() ?? [] };
 		}
 	}

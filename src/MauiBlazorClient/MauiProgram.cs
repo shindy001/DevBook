@@ -1,4 +1,5 @@
 ﻿using DevBook.Grpc.AppSetups;
+using DevBook.Grpc.StartupProfiles;
 using DevBook.Shared;
 using MauiBlazorClient.Services;
 using Microsoft.Extensions.Logging;
@@ -71,10 +72,9 @@ public static class MauiProgram
 		services.AddSingleton<IProcessService, ProcessService>();
 		services.AddSingleton<IFilePickerService, FilePickerService>();
 
-		services.AddGrpcClient<AppSetupsGrpcService.AppSetupsGrpcServiceClient>(o =>
-		{
-			o.Address = new Uri(GrpcServerAddress);
-		});
+		// GRPC clients
+		services.AddGrpcClient<AppSetupsGrpcService.AppSetupsGrpcServiceClient>(o => o.Address = new Uri(GrpcServerAddress));
+		services.AddGrpcClient<StartupProfilesGrpcService.StartupProfilesGrpcServiceClient>(o => o.Address = new Uri(GrpcServerAddress));
 
 		services.AddSingleton<IAppSetupsService, AppSetupsService>();
 		services.AddSingleton<IStartupProfilesService, StartupProfilesService>();

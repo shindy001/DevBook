@@ -1,53 +1,37 @@
-using Bogus;
-using MauiBlazorClient.Services.DTO;
+using DevBook.Grpc.StartupProfiles;
 
 namespace MauiBlazorClient.Services;
 
-public sealed class StartupProfilesService : IStartupProfilesService
+public sealed class StartupProfilesService(StartupProfilesGrpcService.StartupProfilesGrpcServiceClient _startupProfilesGrpcService) : IStartupProfilesService
 {
-	private readonly List<StartupProfileDto> _startupProfiles = [];
-
-	public StartupProfilesService()
+	public async Task<StartupProfileDto> Get(string id)
 	{
-		var faker = new Faker<StartupProfileDto>()
-			.RuleFor(x => x.Id, f => Guid.NewGuid().ToString())
-			.RuleFor(x => x.Name, f => f.Lorem.Slug());
-		_startupProfiles.AddRange(faker.Generate(10));
+		var result = await _startupProfilesGrpcService.GetByIdAsync(new GetByIdRequest { Id = id });
+		return result.Item;
 	}
 
-	public Task<StartupProfileDto> Get(string id)
+	public async Task<IEnumerable<StartupProfileDto>> GetAll()
 	{
-		return Task.FromResult(_startupProfiles.Single(x => x.Id == id));
+		var result = await _startupProfilesGrpcService.GetAllAsync(new GetAllRequest());
+		return result.Items;
 	}
 
-	public Task<IEnumerable<StartupProfileDto>> List()
+	public async Task Create(string name, IEnumerable<string> appSetupIds)
 	{
-		return Task.FromResult(_startupProfiles.AsEnumerable());
+		var request = new CreateRequest { Name = name };
+		request.AppSetupIds.AddRange(appSetupIds);
+		await _startupProfilesGrpcService.CreateAsync(request);
 	}
 
-	public Task Create(string name, IEnumerable<string> appSetupIds)
+	public async Task Update(string id, string name, IEnumerable<string> appSetupIds)
 	{
-		_startupProfiles.Add(new StartupProfileDto { Id = Guid.NewGuid().ToString(), Name = name, AppSetupIds = appSetupIds });
-		return Task.CompletedTask;
+		var request = new UpdateRequest { Id = id, Name = name };
+		request.AppSetupIds.AddRange(appSetupIds);
+		await _startupProfilesGrpcService.UpdateAsync(request);
 	}
 
-	public Task Update(string id, string name, IEnumerable<string> appSetupIds)
+	public async Task Delete(string id)
 	{
-		var itemIndex = _startupProfiles.FindIndex(x => x.Id == id);
-		if (itemIndex is not -1)
-		{
-			_startupProfiles[itemIndex] = new StartupProfileDto { Id = id, Name = name, AppSetupIds = appSetupIds };
-		}
-		return Task.CompletedTask;
-	}
-
-	public Task Delete(string id)
-	{
-		var appSetup = _startupProfiles.Single(x => x.Id == id);
-		if (appSetup is not null)
-		{
-			_startupProfiles.Remove(appSetup);
-		}
-		return Task.CompletedTask;
+		await _startupProfilesGrpcService.DeleteAsync(new DeleteRequest { Id = id });
 	}
 }
