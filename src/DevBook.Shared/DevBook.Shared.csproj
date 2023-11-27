@@ -26,4 +26,8 @@
 		<Protobuf Include="Protos\**\*.proto" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="Protos\hacker_news.proto" />
+	</ItemGroup>
+
 </Project>

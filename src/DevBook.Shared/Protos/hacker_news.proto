@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "DevBook.Grpc.HackerNews";
+package hacker_news;
+
+service HackerNewsGrpcService {
+  rpc GetNews (GetNewsRequest) returns (GetNewsResponse);
+}
+
+message NewsArticleDto {
+  string title = 1;
+  string url = 2;
+}
+
+message GetNewsRequest {}
+
+message GetNewsResponse {
+  repeated NewsArticleDto items = 1;
+}
