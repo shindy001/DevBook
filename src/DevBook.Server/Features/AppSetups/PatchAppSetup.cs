@@ -1,5 +1,5 @@
-﻿using DevBook.Server.Common;
-using DevBook.Server.Infrastructure;
+﻿using DevBook.Server.Infrastructure;
+using DevBook.Server.Validation;
 using DevBook.Shared.Contracts;
 using FluentValidation;
 using OneOf;

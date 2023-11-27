@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using DevBook.Shared;
 using DevBook.Shared.Contracts;
-using DevBook.Server.Common;
 using FluentValidation;
 
 namespace DevBook.Server.Infrastructure;

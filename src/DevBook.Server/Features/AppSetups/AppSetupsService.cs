@@ -1,5 +1,5 @@
 using DevBook.Grpc.AppSetups;
-using DevBook.Server.Common;
+using DevBook.Server.Exceptions;
 using DevBook.Shared.Contracts;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;

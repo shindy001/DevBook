@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace DevBook.Server.Common;
+namespace DevBook.Server.Validation;
 
 public static class IdRuleBuilderOptions
 {

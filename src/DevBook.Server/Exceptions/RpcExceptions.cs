@@ -1,6 +1,6 @@
 ﻿using Grpc.Core;
 
-namespace DevBook.Server.Common;
+namespace DevBook.Server.Exceptions;
 
 internal static class RpcExceptions
 {

@@ -1,4 +1,4 @@
-﻿using DevBook.Server.Common;
+﻿using DevBook.Shared;
 
 namespace DevBook.Server.Features.StartupProfiles;
 

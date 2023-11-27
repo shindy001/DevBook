@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using DevBook.Server.Exceptions;
+using Grpc.Core;
 using Grpc.Core.Interceptors;
 using System.Text.Json;
 
