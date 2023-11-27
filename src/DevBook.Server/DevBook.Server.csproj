@@ -8,11 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Protobuf Include="..\Protos\**\*.proto" GrpcServices="Server" />
-		<Content Include="@(Protobuf)" LinkBase="Protos" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
 		<PackageReference Include="Grpc.AspNetCore" Version="2.59.0" />
 		<PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.59.0" />

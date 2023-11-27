@@ -45,9 +45,6 @@
 	<ItemGroup>
 		<PackageReference Include="Bogus" Version="34.0.2" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-		<PackageReference Include="Google.Protobuf" Version="3.25.0" />
-		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.59.0" />
-		<PackageReference Include="Grpc.Tools" Version="2.59.0" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
@@ -56,16 +53,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\DevBook.Shared\DevBook.Shared.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Protobuf Include="..\Protos\**\*.proto" GrpcServices="Client" OutputDir="Generated\" />
-		<Content Include="@(Protobuf)" LinkBase="Protos" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="Generated\" />
+		<ProjectReference Include="..\DevBook.Shared\DevBook.Shared.csproj" />
 	</ItemGroup>
 
 	<Target Name="RunTailwindGen" AfterTargets="BeforePublish">
