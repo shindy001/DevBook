@@ -43,12 +43,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Bogus" Version="34.0.2" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0-rc.2.23479.6" />
 		<PackageReference Include="MudBlazor" Version="6.11.0" />
 	</ItemGroup>
 
