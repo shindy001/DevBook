@@ -4,21 +4,14 @@
 	</MudDrawerHeader>
 	<MudDrawerContainer>
 		<MudList Dense="true">
-			<MudListItem>
-				<ChildContent>
-					<MudLink Href="https://news.ycombinator.com/newest">1. I Fought The PayPal And I Won</MudLink>
-				</ChildContent>
-			</MudListItem>
-			<MudListItem>
-				<ChildContent>
-					<MudLink Href="https://news.ycombinator.com/newest">2. Many Companies Aren’t Prepared to Replace Underperforming CEOs</MudLink>
-				</ChildContent>
-			</MudListItem>
-			<MudListItem>
-				<ChildContent>
-					<MudLink Href="https://news.ycombinator.com/newest">3. In defense of linked lists</MudLink>
-				</ChildContent>
-			</MudListItem>
+			@foreach (var article in _model.NewsArticles.Select((value, index) => new { index, value }))
+			{
+				<MudListItem>
+					<ChildContent>
+						<MudLink Href="@article.value.Url">@($"{article.index + 1}. {article.value.Title}")</MudLink>
+					</ChildContent>
+				</MudListItem>
+			}
 		</MudList>
 	</MudDrawerContainer>
 </MudDrawer>

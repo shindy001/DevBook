@@ -1,4 +1,5 @@
 ﻿using DevBook.Grpc.AppSetups;
+using DevBook.Grpc.HackerNews;
 using DevBook.Grpc.StartupProfiles;
 using DevBook.Shared;
 using MauiBlazorClient.Services;
@@ -75,9 +76,11 @@ public static class MauiProgram
 		// GRPC clients
 		services.AddGrpcClient<AppSetupsGrpcService.AppSetupsGrpcServiceClient>(o => o.Address = new Uri(GrpcServerAddress));
 		services.AddGrpcClient<StartupProfilesGrpcService.StartupProfilesGrpcServiceClient>(o => o.Address = new Uri(GrpcServerAddress));
+		services.AddGrpcClient<HackerNewsGrpcService.HackerNewsGrpcServiceClient>(o => o.Address = new Uri(GrpcServerAddress));
 
 		services.AddSingleton<IAppSetupsService, AppSetupsService>();
 		services.AddSingleton<IStartupProfilesService, StartupProfilesService>();
+		services.AddSingleton<IHackerNewsService, HackerNewsService>();
 
 		var appStore = new AppStore();
 		appStore.Initialize();
