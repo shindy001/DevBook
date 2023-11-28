@@ -18,7 +18,7 @@ internal sealed class HackerNewsApi(HttpClient _httpClient, ILogger<HackerNewsAp
 	{
 		try
 		{
-			var newsIds = await _httpClient.GetFromJsonAsync<long[]>($"v0/newstories.json",
+			var newsIds = await _httpClient.GetFromJsonAsync<long[]>($"v0/showstories.json",
 				new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
 			ConcurrentBag<NewsArticle> articles = [];
