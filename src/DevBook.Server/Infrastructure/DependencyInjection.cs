@@ -2,6 +2,7 @@
 using DevBook.Shared;
 using DevBook.Shared.Contracts;
 using FluentValidation;
+using DevBook.Server.Common;
 
 namespace DevBook.Server.Infrastructure;
 
@@ -11,23 +12,29 @@ internal static class DependencyInjection
 	{
 		var assembly = typeof(Program).Assembly;
 		services.AddLogging(cfg => cfg.AddDevBookLogging());
-		services.AddCommandsAndQueriesExecutor(assembly);
 
 		services.AddDbContextPool<DevBookDbContext>(
 			o => o.UseSqlite(GetSqliteConnectionString(),
 			b => b.MigrationsAssembly(assembly.GetName().Name)));
 
-		services.AddScoped<IUnitOfWork, UnitOfWork>();
+		services.AddGrpc(cfg => cfg.Interceptors.Add<GrpgGlobalExceptionInterceptor>());
+		services.AddGrpcReflection();
+
+		services.AddCommandsAndQueriesExecutor(assembly);
+
 		services.AddValidatorsFromAssembly(assembly);
 		services.AddPipelineBehavior(typeof(CommandValidationPipelineBehavior<,>));
+
+		services.AddScoped<IUnitOfWork, UnitOfWork>();
 		services.AddPipelineBehavior(typeof(UnitOfWorkCommandPipelineBehavior<,>));
 		services.AddPipelineBehavior(typeof(UnitOfWorkQueryPipelineBehavior<,>));
 
 		return services;
 	}
 
-	internal static IServiceScope InitializeDb(this IServiceScope scope, bool applyMigrations = false)
+	internal static IApplicationBuilder InitializeDb(this IApplicationBuilder builder, bool applyMigrations = false)
 	{
+		using var scope = builder.ApplicationServices.CreateScope();
 		var db = scope.ServiceProvider.GetRequiredService<DevBookDbContext>();
 		db.Database.EnsureCreated();
 
@@ -36,7 +43,7 @@ internal static class DependencyInjection
 			db.Database.Migrate();
 		}
 
-		return scope;
+		return builder;
 	}
 
 	private static string GetSqliteConnectionString()
