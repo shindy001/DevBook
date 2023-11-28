@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.Text.Json;
-using static System.Net.WebRequestMethods;
 
 namespace DevBook.Server.Features.HackerNews;
 
@@ -18,7 +17,7 @@ internal sealed class HackerNewsApi(HttpClient _httpClient, ILogger<HackerNewsAp
 	{
 		try
 		{
-			var newsIds = await _httpClient.GetFromJsonAsync<long[]>($"v0/showstories.json",
+			var newsIds = await _httpClient.GetFromJsonAsync<long[]>($"v0/newstories.json",
 				new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
 			ConcurrentBag<NewsArticle> articles = [];
