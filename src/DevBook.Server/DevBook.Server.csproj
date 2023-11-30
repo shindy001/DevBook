@@ -5,6 +5,7 @@
 		<GenerateDocumentationFile>False</GenerateDocumentationFile>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
+
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -16,6 +17,10 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\DevBook.Shared\DevBook.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="DevBook.Server.IntegrationTests" />
 	</ItemGroup>
 
 </Project>

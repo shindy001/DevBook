@@ -7,7 +7,6 @@ internal static class DependencyInjection
 {
 	internal static IServiceCollection AddHackerNewsApi(this IServiceCollection services, Settings settings)
 	{
-		services.AddScoped<IHackerNewsApi, HackerNewsApi>();
 		services.AddHttpClient<IHackerNewsApi, HackerNewsApi>(client => client.BaseAddress = new Uri(settings.HackerNewsBaseAddress));
 
 		return services;

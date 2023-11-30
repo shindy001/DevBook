@@ -19,7 +19,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{03532E70-9260-41DE-BAD0-62125B07B86B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevBook.Shared", "src\DevBook.Shared\DevBook.Shared.csproj", "{F0ABDC51-BFBB-4372-AFB9-D82F134F157A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevBook.Shared", "src\DevBook.Shared\DevBook.Shared.csproj", "{F0ABDC51-BFBB-4372-AFB9-D82F134F157A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevBook.Server.IntegrationTests", "src\DevBook.Server.IntegrationTests\DevBook.Server.IntegrationTests.csproj", "{2E9562E0-CAEE-44EE-8FAE-8FB6081D0687}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +42,10 @@ Global
 		{F0ABDC51-BFBB-4372-AFB9-D82F134F157A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F0ABDC51-BFBB-4372-AFB9-D82F134F157A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F0ABDC51-BFBB-4372-AFB9-D82F134F157A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E9562E0-CAEE-44EE-8FAE-8FB6081D0687}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E9562E0-CAEE-44EE-8FAE-8FB6081D0687}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E9562E0-CAEE-44EE-8FAE-8FB6081D0687}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E9562E0-CAEE-44EE-8FAE-8FB6081D0687}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{C29B2008-E795-4D18-B109-8358E28FF3AC} = {696852D8-E3BA-4AB2-B0EA-8C9F7CFC20A7}
 		{D346FA49-234B-4E89-8B3E-F5DC5E19F59D} = {EED57D69-6894-46CC-9F8B-B38E06EAB74C}
 		{F0ABDC51-BFBB-4372-AFB9-D82F134F157A} = {03532E70-9260-41DE-BAD0-62125B07B86B}
+		{2E9562E0-CAEE-44EE-8FAE-8FB6081D0687} = {696852D8-E3BA-4AB2-B0EA-8C9F7CFC20A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A92A59A8-6B6F-4588-8CD1-F30DEE88BA4B}
