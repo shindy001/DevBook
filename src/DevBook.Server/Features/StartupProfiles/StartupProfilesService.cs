@@ -1,4 +1,5 @@
-﻿using DevBook.Grpc.StartupProfiles;
+﻿using DevBook.Grpc.Common;
+using DevBook.Grpc.StartupProfiles;
 using DevBook.Server.Exceptions;
 using DevBook.Shared.Contracts;
 using Google.Protobuf.WellKnownTypes;
@@ -24,10 +25,10 @@ internal sealed class StartupProfilesService(IExecutor _executor) : StartupProfi
 			_ => throw RpcExceptions.NotFound(request.Id));
 	}
 
-	public override async Task<Empty> Create(CreateRequest request, ServerCallContext context)
+	public override async Task<CreateResponse> Create(CreateRequest request, ServerCallContext context)
 	{
-		await _executor.ExecuteCommand(new CreateStartupProfileCommand(request.Name, [.. request.AppSetupIds]));
-		return new Empty();
+		var id = await _executor.ExecuteCommand(new CreateStartupProfileCommand(request.Name, [.. request.AppSetupIds]));
+		return new CreateResponse { Id = id.ToString() };
 	}
 
 	public override async Task<Empty> Update(UpdateRequest request, ServerCallContext context)

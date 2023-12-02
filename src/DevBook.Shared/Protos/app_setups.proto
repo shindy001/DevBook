@@ -5,11 +5,12 @@ package app_setups;
 
 import "google/protobuf/empty.proto";
 import "google/protobuf/wrappers.proto";
+import "common/create_response.proto";
 
 service AppSetupsGrpcService {
   rpc GetAll (GetAllRequest) returns (GetAllResponse);
   rpc GetById (GetByIdRequest) returns (GetByIdResponse);
-  rpc Create (CreateRequest) returns (google.protobuf.Empty);
+  rpc Create (CreateRequest) returns (common.CreateResponse);
   rpc Update (UpdateRequest) returns (google.protobuf.Empty);
   rpc Patch (PatchRequest) returns (google.protobuf.Empty);
   rpc Delete (DeleteRequest) returns (google.protobuf.Empty);

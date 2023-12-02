@@ -14,7 +14,7 @@ internal sealed class UnitOfWorkCommandPipelineBehavior<TRequest, TResponse>
 	public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
 	{
 		var response = await next();
-		await _unitOfWork.CommitAsync();
+		await _unitOfWork.CommitAsync(cancellationToken: cancellationToken);
 		return response;
 	}
 }

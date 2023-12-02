@@ -8,7 +8,7 @@ public sealed record CreateAppSetupCommand(
 	string Name,
 	string Path,
 	string? Arguments)
-	: ICommand;
+	: ICommand<Guid>;
 
 public sealed class CreateAppSetupCommandValidator : AbstractValidator<CreateAppSetupCommand>
 {
@@ -19,11 +19,13 @@ public sealed class CreateAppSetupCommandValidator : AbstractValidator<CreateApp
 	}
 }
 
-internal sealed class CreateAppSetupCommandHandler(DevBookDbContext _dbContext) : ICommandHandler<CreateAppSetupCommand>
+internal sealed class CreateAppSetupCommandHandler(DevBookDbContext _dbContext) : ICommandHandler<CreateAppSetupCommand, Guid>
 {
-	public async Task Handle(CreateAppSetupCommand request, CancellationToken cancellationToken)
+	public async Task<Guid> Handle(CreateAppSetupCommand request, CancellationToken cancellationToken)
 	{
 		var newItem = new AppSetup(request.Name, request.Path, request.Arguments);
 		await _dbContext.AppSetups.AddAsync(newItem, cancellationToken: cancellationToken);
+		await _dbContext.SaveChangesAsync(cancellationToken: cancellationToken);
+		return newItem.Id;
 	}
 }

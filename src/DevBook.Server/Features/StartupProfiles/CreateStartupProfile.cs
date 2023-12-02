@@ -9,7 +9,7 @@ namespace DevBook.Server.Features.StartupProfiles;
 public sealed record CreateStartupProfileCommand(
 	string Name,
 	string[] AppSetupIds)
-	: ICommand;
+	: ICommand<Guid>;
 
 public sealed class CreateStartupProfileCommandValidator : AbstractValidator<CreateStartupProfileCommand>
 {
@@ -20,9 +20,9 @@ public sealed class CreateStartupProfileCommandValidator : AbstractValidator<Cre
 	}
 }
 
-internal sealed class CreateStartupProfileCommandHandler(DevBookDbContext _dbContext) : ICommandHandler<CreateStartupProfileCommand>
+internal sealed class CreateStartupProfileCommandHandler(DevBookDbContext _dbContext) : ICommandHandler<CreateStartupProfileCommand, Guid>
 {
-	public async Task Handle(CreateStartupProfileCommand request, CancellationToken cancellationToken)
+	public async Task<Guid> Handle(CreateStartupProfileCommand request, CancellationToken cancellationToken)
 	{
 		var guids = request.AppSetupIds.Select(Guid.Parse);
 
@@ -33,5 +33,7 @@ internal sealed class CreateStartupProfileCommandHandler(DevBookDbContext _dbCon
 
 		var newItem = new StartupProfile(request.Name, appSetupIds);
 		await _dbContext.StartupProfiles.AddAsync(newItem, cancellationToken: cancellationToken);
+		await _dbContext.SaveChangesAsync(cancellationToken: cancellationToken);
+		return newItem.Id;
 	}
 }

@@ -1,4 +1,5 @@
 using DevBook.Grpc.AppSetups;
+using DevBook.Grpc.Common;
 using DevBook.Server.Exceptions;
 using DevBook.Shared.Contracts;
 using Google.Protobuf.WellKnownTypes;
@@ -24,10 +25,10 @@ internal sealed class AppSetupsService(IExecutor _executor) : AppSetupsGrpcServi
 			_ => throw RpcExceptions.NotFound(request.Id));
 	}
 
-	public override async Task<Empty> Create(CreateRequest request, ServerCallContext context)
+	public override async Task<CreateResponse> Create(CreateRequest request, ServerCallContext context)
 	{
-		await _executor.ExecuteCommand(new CreateAppSetupCommand(request.Name, request.Path, request.Arguments));
-		return new Empty();
+		var id = await _executor.ExecuteCommand(new CreateAppSetupCommand(request.Name, request.Path, request.Arguments));
+		return new CreateResponse { Id = id.ToString() };
 	}
 
 	public override async Task<Empty> Update(UpdateRequest request, ServerCallContext context)
