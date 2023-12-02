@@ -2,7 +2,7 @@
 
 namespace DevBook.Server.Features.StartupProfiles;
 
-internal sealed record StartupProfile(
+public sealed record StartupProfile(
 	string Name,
 	Guid[] AppSetupIds)
 	: Entity(Guid.NewGuid());

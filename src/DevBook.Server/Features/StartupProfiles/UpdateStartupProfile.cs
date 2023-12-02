@@ -37,9 +37,15 @@ internal sealed class UpdateStartupProfileCommandHandler(DevBookDbContext _dbCon
 				.Select(x => x.Id)
 				.ToArrayAsync(cancellationToken: cancellationToken);
 
-			var update = new StartupProfile(request.Name, appSetupIds);
+			var update = new Dictionary<string, object>
+			{
+				[nameof(StartupProfile.Name)] = request.Name,
+				[nameof(StartupProfile.AppSetupIds)] = request.AppSetupIds.Length != 0
+					? await _dbContext.GetExistingAppSetupGuids(guids, cancellationToken)
+					: request.AppSetupIds
+			};
 			
-			_dbContext.StartupProfiles.Entry(existingItem).CurrentValues.SetValues(new { update.Name, update.AppSetupIds });
+			_dbContext.StartupProfiles.Entry(existingItem).CurrentValues.SetValues(update);
 			await _dbContext.SaveChangesAsync(cancellationToken);
 			return new Success();
 		}

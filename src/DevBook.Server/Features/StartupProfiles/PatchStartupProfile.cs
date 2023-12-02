@@ -2,7 +2,6 @@
 using DevBook.Server.Validation;
 using DevBook.Shared.Contracts;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using OneOf;
 using OneOf.Types;
 
@@ -31,17 +30,15 @@ internal sealed class PatchStartupProfileCommandHandler(DevBookDbContext _dbCont
 		if (existingItem is not null)
 		{
 			var guids = request.AppSetupIds.Select(Guid.Parse);
+			var update = new Dictionary<string, object>
+			{
+				[nameof(StartupProfile.Name)] = request.Name ?? existingItem.Name,
+				[nameof(StartupProfile.AppSetupIds)] = request.AppSetupIds.Length != 0
+					? await _dbContext.GetExistingAppSetupGuids(guids, cancellationToken)
+					: existingItem.AppSetupIds
+			};
 
-			var update = new StartupProfile(
-				request.Name ?? existingItem.Name,
-				request.AppSetupIds.Length != 0
-					? await _dbContext.AppSetups
-						.Where(x => guids.Contains(x.Id))
-						.Select(x => x.Id)
-						.ToArrayAsync(cancellationToken: cancellationToken)
-					: existingItem.AppSetupIds);
-
-			_dbContext.StartupProfiles.Entry(existingItem).CurrentValues.SetValues(new { update.Name, update.AppSetupIds });
+			_dbContext.StartupProfiles.Entry(existingItem).CurrentValues.SetValues(update);
 			await _dbContext.SaveChangesAsync(cancellationToken: cancellationToken);
 			return new Success();
 		}
