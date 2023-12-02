@@ -13,7 +13,12 @@ namespace DevBook.Server.IntegrationTests.Features.Helpers;
 
 public delegate void LogMessage(LogLevel logLevel, string categoryName, EventId eventId, string message, Exception? exception);
 
-public sealed class DevBookTextFixture<TStartup> : IDisposable where TStartup : class
+/// <summary>
+/// Creates fixture with grpc test server setup, every instance also has different db (integrationTests-[Guid].db).
+/// DB is deleted on dispose.
+/// </summary>
+/// <typeparam name="TStartup"></typeparam>
+public sealed class DevBookTestFixture<TStartup> : IDisposable where TStartup : class
 {
 	private WebApplicationFactory<Program>? _app;
 	private TestServer? _server;
@@ -35,7 +40,7 @@ public sealed class DevBookTextFixture<TStartup> : IDisposable where TStartup : 
 		}
 	}
 
-	public DevBookTextFixture()
+	public DevBookTestFixture()
 	{
 		LoggerFactory = new LoggerFactory();
 		LoggerFactory.AddProvider(new ForwardingLoggerProvider((logLevel, category, eventId, message, exception) =>
@@ -90,7 +95,7 @@ public sealed class DevBookTextFixture<TStartup> : IDisposable where TStartup : 
 		}
 
 		services.AddDbContextPool<DevBookDbContext>(
-		o => o.UseSqlite($"Data Source={TestDbName};Pooling=False;",
+		o => o.UseSqlite($"Data Source={TestDbName};Pooling=False;", // Disabled pooling so the db file is unlocked after dbcontext dispose and can be deleted
 		b => b.MigrationsAssembly(typeof(Program).Assembly.GetName().Name)));
 	}
 
@@ -111,7 +116,7 @@ public sealed class DevBookTextFixture<TStartup> : IDisposable where TStartup : 
 		_server?.Dispose();
 		_app?.Dispose();
 
-		// Clean test db file after run
+		// Clean test db file after run - does not work when pooled dbcontext is used(default behavior), pooling locks db file
 		File.Delete(TestDbName);
 	}
 }

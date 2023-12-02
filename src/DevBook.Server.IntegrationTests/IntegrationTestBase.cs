@@ -1,16 +1,17 @@
-﻿using DevBook.Server.IntegrationTests.Features.Helpers;
-using Grpc.Net.Client;
+﻿using Grpc.Net.Client;
 using Microsoft.Extensions.Logging;
-using Xunit.Abstractions;
 
 namespace DevBook.Server.IntegrationTests;
 
-public class IntegrationTestBase : IClassFixture<DevBookTextFixture<Program>>, IDisposable
+/// <summary>
+/// Creates new DevBookFixture (webapp) for each test
+/// </summary>
+public class IntegrationTestBase : IDisposable
 {
 	private GrpcChannel? _channel;
 	private IDisposable? _testContext;
 
-	protected DevBookTextFixture<Program> Fixture { get; set; }
+	protected DevBookTestFixture<Program> Fixture { get; set; }
 
 	protected ILoggerFactory LoggerFactory => Fixture.LoggerFactory;
 
@@ -25,9 +26,9 @@ public class IntegrationTestBase : IClassFixture<DevBookTextFixture<Program>>, I
 		});
 	}
 
-	public IntegrationTestBase(DevBookTextFixture<Program> fixture, ITestOutputHelper outputHelper)
+	public IntegrationTestBase(ITestOutputHelper outputHelper)
 	{
-		Fixture = fixture;
+		Fixture = new DevBookTestFixture<Program>();
 		_testContext = Fixture.GetTestContext(outputHelper);
 	}
 

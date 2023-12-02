@@ -6,8 +6,8 @@ public class GetAppSetupTests : IntegrationTestBase
 {
 	private readonly AppSetupsGrpcService.AppSetupsGrpcServiceClient _client;
 
-	public GetAppSetupTests(DevBookTextFixture<Program> fixture, ITestOutputHelper outputHelper)
-		:base(fixture, outputHelper)
+	public GetAppSetupTests(ITestOutputHelper outputHelper)
+		:base(outputHelper)
 	{
 		_client = new AppSetupsGrpcService.AppSetupsGrpcServiceClient(Channel);
 	}

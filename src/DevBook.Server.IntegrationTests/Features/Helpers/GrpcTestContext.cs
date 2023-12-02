@@ -6,10 +6,10 @@ namespace DevBook.Server.IntegrationTests.Features.Helpers;
 internal class GrpcTestContext<TStartup> : IDisposable where TStartup : class
 {
 	private readonly Stopwatch _stopwatch;
-	private readonly DevBookTextFixture<TStartup> _fixture;
+	private readonly DevBookTestFixture<TStartup> _fixture;
 	private readonly ITestOutputHelper _outputHelper;
 
-	public GrpcTestContext(DevBookTextFixture<TStartup> fixture, ITestOutputHelper outputHelper)
+	public GrpcTestContext(DevBookTestFixture<TStartup> fixture, ITestOutputHelper outputHelper)
 	{
 		_stopwatch = Stopwatch.StartNew();
 		_fixture = fixture;
