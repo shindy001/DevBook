@@ -23,16 +23,18 @@ internal sealed class PatchAppSetupCommandHandler(DevBookDbContext _dbContext) :
 {
 	public async Task<OneOf<Success, NotFound>> Handle(PatchAppSetupCommand request, CancellationToken cancellationToken)
 	{
-		var existingItem = await _dbContext.AppSetups.FindAsync(Guid.Parse(request.Id));
+		var existingItem = await _dbContext.AppSetups.FindAsync([Guid.Parse(request.Id)], cancellationToken: cancellationToken);
 		if (existingItem is not null)
 		{
-			var update = new AppSetup(
-				request.Name ?? existingItem.Name,
-				request.Path ?? existingItem.Path,
-				request.Arguments ?? existingItem.Arguments);
+			var update = new Dictionary<string, object?>
+			{
+				[nameof(AppSetup.Name)] = request.Name ?? existingItem.Name,
+				[nameof(AppSetup.Path)] = request.Path ?? existingItem.Path,
+				[nameof(AppSetup.Arguments)] = request.Arguments ?? existingItem.Arguments
+			};
 
-			_dbContext.AppSetups.Entry(existingItem).CurrentValues.SetValues(new { update.Name, update.Path, update.Arguments });
-			await _dbContext.SaveChangesAsync();
+			_dbContext.AppSetups.Entry(existingItem).CurrentValues.SetValues(update);
+			await _dbContext.SaveChangesAsync(cancellationToken);
 			return new Success();
 		}
 		else

@@ -2,7 +2,7 @@
 
 namespace DevBook.Server.Features.AppSetups;
 
-internal sealed record AppSetup(
+public sealed record AppSetup(
 	string Name,
 	string Path,
 	string? Arguments)

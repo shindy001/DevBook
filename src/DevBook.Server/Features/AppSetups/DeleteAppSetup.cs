@@ -9,11 +9,11 @@ internal sealed class DeleteAppSetupCommandHandler(DevBookDbContext _dbContext) 
 {
 	public async Task Handle(DeleteAppSetupCommand request, CancellationToken cancellationToken)
 	{
-		var existingItem = await _dbContext.AppSetups.FindAsync(Guid.Parse(request.Id));
+		var existingItem = await _dbContext.AppSetups.FindAsync([Guid.Parse(request.Id)], cancellationToken: cancellationToken);
 		if (existingItem is not null)
 		{
 			_dbContext.AppSetups.Remove(existingItem);
-			await _dbContext.SaveChangesAsync();
+			await _dbContext.SaveChangesAsync(cancellationToken);
 		}
 	}
 }

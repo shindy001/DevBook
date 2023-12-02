@@ -10,6 +10,6 @@ internal sealed class GetAppSetupsQueryHandler(DevBookDbContext _dbContext) : IQ
 {
 	public async Task<IEnumerable<AppSetup>> Handle(GetAppSetupsQuery request, CancellationToken cancellationToken)
 	{
-		return await _dbContext.AppSetups.ToListAsync();
+		return await _dbContext.AppSetups.ToListAsync(cancellationToken: cancellationToken);
 	}
 }
