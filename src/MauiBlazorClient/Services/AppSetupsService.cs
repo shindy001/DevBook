@@ -24,12 +24,12 @@ internal sealed class AppSetupsService(AppSetupsGrpcService.AppSetupsGrpcService
 
 	public async Task Create(string name, string path, string? arguments)
 	{
-		await _appSetupsGrpcService.CreateAsync(new CreateRequest { Name =  name, Path = path, Arguments = arguments ?? string.Empty });
+		await _appSetupsGrpcService.CreateAsync(new CreateRequest { Name =  name, Path = path, Arguments = arguments });
 	}
 
 	public async Task Update(string id, string name, string path, string? arguments)
 	{
-		await _appSetupsGrpcService.UpdateAsync(new UpdateRequest { Id = id, Name = name, Path = path, Arguments = arguments ?? string.Empty });
+		await _appSetupsGrpcService.UpdateAsync(new UpdateRequest { Id = id, Name = name, Path = path, Arguments = arguments });
 	}
 
 	public async Task Delete(string id)

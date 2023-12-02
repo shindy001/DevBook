@@ -19,7 +19,7 @@ message AppSetupDto {
   string id = 1;
   string name = 2;
   string path = 3;
-  optional string arguments = 4; 
+  google.protobuf.StringValue arguments = 4; 
 }
 
 message GetAllRequest {}
@@ -39,14 +39,14 @@ message GetByIdResponse {
 message CreateRequest {
   string name = 1;
   string path = 2;
-  optional string arguments = 3; 
+  google.protobuf.StringValue arguments = 3;  
 }
 
 message UpdateRequest {
   string id = 1;
   string name = 2;
   string path = 3;
-  optional string arguments = 4; 
+  google.protobuf.StringValue arguments = 4;
 }
 
 message PatchRequest {
