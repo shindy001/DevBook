@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace DevBook.Server.IntegrationTests.Features.Helpers;
+namespace DevBook.Server.IntegrationTests.Helpers;
 
 public delegate void LogMessage(LogLevel logLevel, string categoryName, EventId eventId, string message, Exception? exception);
 
@@ -25,7 +25,7 @@ public sealed class DevBookTestFixture<TStartup> : IDisposable where TStartup : 
 	private HttpClient? _client;
 	private HttpMessageHandler? _handler;
 	private Action<IWebHostBuilder>? _configureWebHost;
-	
+
 	// Use guid postfix for test db in case of parallel test runs
 	private readonly string TestDbName = $"integrationTests-{Guid.NewGuid()}.db";
 

@@ -1,4 +1,5 @@
-﻿using Grpc.Net.Client;
+﻿using DevBook.Server.IntegrationTests.Helpers;
+using Grpc.Net.Client;
 using Microsoft.Extensions.Logging;
 
 namespace DevBook.Server.IntegrationTests;

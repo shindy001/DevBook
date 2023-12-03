@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace DevBook.Server.IntegrationTests.Features.Helpers;
+namespace DevBook.Server.IntegrationTests.Helpers;
 
 internal class ForwardingLoggerProvider : ILoggerProvider
 {

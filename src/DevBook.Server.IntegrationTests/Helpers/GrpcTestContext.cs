@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
-namespace DevBook.Server.IntegrationTests.Features.Helpers;
+namespace DevBook.Server.IntegrationTests.Helpers;
 
 internal class GrpcTestContext<TStartup> : IDisposable where TStartup : class
 {
