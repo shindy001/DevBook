@@ -10,9 +10,9 @@ namespace DevBook.Server.IntegrationTests;
 public class IntegrationTestBase : IDisposable
 {
 	private GrpcChannel? _channel;
-	private IDisposable? _testContext;
+	private readonly IDisposable? _testContext;
 
-	protected DevBookTestFixture<Program> Fixture { get; set; }
+	protected DevBookTestFixture<Program> Fixture { get; }
 
 	protected ILoggerFactory LoggerFactory => Fixture.LoggerFactory;
 
@@ -36,6 +36,7 @@ public class IntegrationTestBase : IDisposable
 	public void Dispose()
 	{
 		_testContext?.Dispose();
-		_channel = null;
+		Fixture?.Dispose();
+		_channel?.Dispose();
 	}
 }
