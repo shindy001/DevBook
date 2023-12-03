@@ -20,7 +20,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<InternalsVisibleTo Include="DevBook.Server.IntegrationTests" />
+		<!-- DynamicProxyGenAssembly2 is for NSubstitu/Moq gen -->
+		<InternalsVisibleTo Include="DevBook.Server.IntegrationTests;DynamicProxyGenAssembly2" />
 	</ItemGroup>
 
 </Project>

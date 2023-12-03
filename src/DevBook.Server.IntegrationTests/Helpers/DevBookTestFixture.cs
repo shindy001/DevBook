@@ -1,12 +1,11 @@
-﻿using DevBook.Server.Features.HackerNews;
-using DevBook.Server.Infrastructure;
-using DevBook.Server.IntegrationTests.Fakes;
+﻿using DevBook.Server.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace DevBook.Server.IntegrationTests.Helpers;
@@ -54,6 +53,22 @@ public sealed class DevBookTestFixture<TStartup> : IDisposable where TStartup : 
 		_configureWebHost = configure;
 	}
 
+	public void ReplaceService<TInterface>(object instance)
+	{
+		this.ConfigureWebHost(builder =>
+		{
+			builder.ConfigureServices(
+				services =>
+				{
+					var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(TInterface));
+					if (descriptor != null)
+					{
+						services.Replace(new ServiceDescriptor(typeof(TInterface), provider => instance!, descriptor.Lifetime));
+					}
+				});
+		});
+	}
+
 	public IDisposable GetTestContext(ITestOutputHelper outputHelper)
 	{
 		return new GrpcTestContext<TStartup>(this, outputHelper);
@@ -72,7 +87,6 @@ public sealed class DevBookTestFixture<TStartup> : IDisposable where TStartup : 
 						services.AddSingleton<ILoggerFactory>(LoggerFactory);
 
 						ReplaceDbWithTestDb(services);
-						ReplaceHackerNewApiWithFake(services);
 					});
 
 					builder.UseTestServer();
@@ -97,16 +111,6 @@ public sealed class DevBookTestFixture<TStartup> : IDisposable where TStartup : 
 		services.AddDbContextPool<DevBookDbContext>(
 		o => o.UseSqlite($"Data Source={TestDbName};Pooling=False;", // Disabled pooling so the db file is unlocked after dbcontext dispose and can be deleted
 		b => b.MigrationsAssembly(typeof(Program).Assembly.GetName().Name)));
-	}
-
-	private void ReplaceHackerNewApiWithFake(IServiceCollection services)
-	{
-		var hackerNewsApiDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IHackerNewsApi));
-		if (hackerNewsApiDescriptor != null)
-		{
-			services.Remove(hackerNewsApiDescriptor);
-		}
-		services.AddScoped<IHackerNewsApi, HackerNewsApiFake>();
 	}
 
 	public void Dispose()
