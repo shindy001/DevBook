@@ -1,9 +1,16 @@
 ﻿using DevBook.Server.Infrastructure;
+using DevBook.Server.Validation;
 using DevBook.Shared.Contracts;
+using FluentValidation;
 
 namespace DevBook.Server.Features.AppSetups;
 
-internal sealed record DeleteAppSetupCommand(string Id) : ICommand;
+public sealed record DeleteAppSetupCommand(string Id) : ICommand;
+
+public sealed class DeleteAppSetupCommandValidator : AbstractValidator<DeleteAppSetupCommand>
+{
+	public DeleteAppSetupCommandValidator() => RuleFor(x => x.Id).IsValidId();
+}
 
 internal sealed class DeleteAppSetupCommandHandler(DevBookDbContext _dbContext) : ICommandHandler<DeleteAppSetupCommand>
 {
