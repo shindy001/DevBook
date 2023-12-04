@@ -20,7 +20,6 @@ public static class LoggingBuilderExtensions
 			.CreateLogger();
 
 		builder.AddSerilog(Log.Logger);
-		Log.Information("Ah, there you are!");
 
 		return builder;
 	}
