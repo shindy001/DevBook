@@ -9,6 +9,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<EnableDefaultCssItems>false</EnableDefaultCssItems>
 		<Nullable>enable</Nullable>
+		<Configurations>Debug;Release;Test</Configurations>
 
 		<!-- Display name -->
 		<ApplicationTitle>MauiBlazorClient</ApplicationTitle>
