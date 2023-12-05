@@ -42,7 +42,7 @@ internal sealed class UpdateStartupProfileCommandHandler(DevBookDbContext _dbCon
 				[nameof(StartupProfile.Name)] = request.Name,
 				[nameof(StartupProfile.AppSetupIds)] = request.AppSetupIds.Length != 0
 					? await _dbContext.GetExistingAppSetupGuids(guids, cancellationToken)
-					: request.AppSetupIds
+					: []
 			};
 			
 			_dbContext.StartupProfiles.Entry(existingItem).CurrentValues.SetValues(update);
