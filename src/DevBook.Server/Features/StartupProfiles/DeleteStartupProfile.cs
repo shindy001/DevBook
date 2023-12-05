@@ -1,9 +1,19 @@
 ﻿using DevBook.Server.Infrastructure;
+using DevBook.Server.Validation;
 using DevBook.Shared.Contracts;
+using FluentValidation;
 
 namespace DevBook.Server.Features.StartupProfiles;
 
-internal sealed record DeleteStartupProfileCommand(string Id) : ICommand;
+public sealed record DeleteStartupProfileCommand(string Id) : ICommand;
+
+public sealed class DeleteStartupProfileCommandValidator : AbstractValidator<DeleteStartupProfileCommand>
+{
+	public DeleteStartupProfileCommandValidator()
+	{
+		RuleFor(x => x.Id).IsValidId();
+	}
+}
 
 internal sealed class DeleteStartupProfileCommandHandler(DevBookDbContext _dbContext) : ICommandHandler<DeleteStartupProfileCommand>
 {
