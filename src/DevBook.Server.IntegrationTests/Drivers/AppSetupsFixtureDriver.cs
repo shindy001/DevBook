@@ -1,6 +1,6 @@
 ﻿using DevBook.Grpc.AppSetups;
 
-namespace DevBook.Server.IntegrationTests.Features.AppSetups;
+namespace DevBook.Server.IntegrationTests.Drivers;
 
 internal class AppSetupsFixtureDriver(AppSetupsGrpcService.AppSetupsGrpcServiceClient _client)
 {
