@@ -12,10 +12,10 @@ Purpose of this repo is also to brush up on my rusty skills and to try new langu
 - [x] App management - name, path, args
 - [x] Startup Profile management - name, apps to start
 - [x] Hacker News integration - lists 10 newest hacker news in a side drawer for quick access
-- [ ] Server Integration Tests
-- [ ] Client Integration Tests 
+- [x] Server Integration Tests
 - [ ] Github pull request integration - lists your current Github PRs for quick access
 - [ ] Time/Task/Work management
+- [ ] Client Integration Tests
 - [ ] Work statistics, work evidence export - for week/month
 - [ ] Spotify api integration ?
 - [ ] Weather api integration ? 
