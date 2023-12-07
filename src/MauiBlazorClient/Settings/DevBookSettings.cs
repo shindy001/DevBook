@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace MauiBlazorClient.Services.DTO;
+namespace MauiBlazorClient.Settings;
 
 public sealed class DevBookSettings
 {
