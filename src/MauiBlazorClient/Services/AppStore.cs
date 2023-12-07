@@ -4,14 +4,13 @@ using System.Text.Json;
 
 namespace MauiBlazorClient.Services;
 
-public sealed class AppStore : IAppStore, IDisposable
+public sealed class AppStore : IAppStore
 {
 	private readonly string DataFile = "DevBook\\DevBookSettings.json";
 	private string DataPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), DataFile);
 	private readonly JsonSerializerOptions JsonSerializerOptions = new() { WriteIndented = true };
 
 	public DevBookSettings DevBookSettings { get; private set; } = new();
-
 	public DashboardData DashboardData => DevBookSettings.DashboardData;
 
 	public void Initialize()
@@ -45,14 +44,6 @@ public sealed class AppStore : IAppStore, IDisposable
 		catch (Exception ex)
 		{
 			// Log error
-		}
-	}
-
-	public void Dispose()
-	{
-		if (DevBookSettings?.DashboardData != null)
-		{
-			this.DashboardData.PropertyChanged -= async (s, a) => await OnDataChanged(s, a);
 		}
 	}
 }
