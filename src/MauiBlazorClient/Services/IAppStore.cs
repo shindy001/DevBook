@@ -2,62 +2,61 @@
 using System.ComponentModel;
 using System.Text.Json;
 
-namespace MauiBlazorClient.Services
+namespace MauiBlazorClient.Services;
+
+public interface IAppStore
 {
-	public interface IAppStore
+	public DashboardData DashboardData { get; }
+}
+
+public sealed class AppStore : IAppStore, IDisposable
+{
+	private readonly string DataFile = "DevBook\\DevBookSettings.json";
+	private string DataPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), DataFile);
+	private readonly JsonSerializerOptions JsonSerializerOptions = new() { WriteIndented = true };
+
+	public DevBookSettings DevBookSettings { get; private set; } = new();
+
+	public DashboardData DashboardData => DevBookSettings.DashboardData;
+
+	public void Initialize()
 	{
-		public DashboardData DashboardData { get; }
+		if (File.Exists(DataPath))
+		{
+			var file = File.ReadAllText(DataPath);
+			this.DevBookSettings = JsonSerializer.Deserialize<DevBookSettings>(file) ?? this.DevBookSettings;
+		}
+		this.DashboardData.PropertyChanged += async (s, a) => await OnDataChanged(s, a);
 	}
 
-	public sealed class AppStore : IAppStore, IDisposable
+	public async Task SaveData()
 	{
-		private readonly string DataFile = "DevBook\\DevBookSettings.json";
-		private string DataPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), DataFile);
-		private readonly JsonSerializerOptions JsonSerializerOptions = new() { WriteIndented = true };
-
-		public DevBookSettings DevBookSettings { get; private set; } = new();
-
-		public DashboardData DashboardData => DevBookSettings.DashboardData;
-
-		public void Initialize()
+		var json = JsonSerializer.Serialize(DevBookSettings, JsonSerializerOptions);
+		var directory = Path.GetDirectoryName(DataPath);
+		if (directory != null && !Directory.Exists(directory))
 		{
-			if (File.Exists(DataPath))
-			{
-				var file = File.ReadAllText(DataPath);
-				this.DevBookSettings = JsonSerializer.Deserialize<DevBookSettings>(file) ?? this.DevBookSettings;
-			}
-			this.DashboardData.PropertyChanged += async (s, a) => await OnDataChanged(s, a);
+			Directory.CreateDirectory(directory);
 		}
+		await File.WriteAllTextAsync(DataPath, json);
+	}
 
-		public async Task SaveData()
+	private async Task OnDataChanged(object? sender, PropertyChangedEventArgs e)
+	{
+		try
 		{
-			var json = JsonSerializer.Serialize(DevBookSettings, JsonSerializerOptions);
-			var directory = Path.GetDirectoryName(DataPath);
-			if (directory != null && !Directory.Exists(directory))
-			{
-				Directory.CreateDirectory(directory);
-			}
-			await File.WriteAllTextAsync(DataPath, json);
+			await SaveData();
 		}
-
-		private async Task OnDataChanged(object? sender, PropertyChangedEventArgs e)
+		catch (Exception ex)
 		{
-			try
-			{
-				await SaveData();
-			}
-			catch (Exception ex)
-			{
-				// Log error
-			}
+			// Log error
 		}
+	}
 
-		public void Dispose()
+	public void Dispose()
+	{
+		if (DevBookSettings?.DashboardData != null)
 		{
-			if (DevBookSettings?.DashboardData != null)
-			{
-				this.DashboardData.PropertyChanged -= async (s, a) => await OnDataChanged(s, a);
-			}
+			this.DashboardData.PropertyChanged -= async (s, a) => await OnDataChanged(s, a);
 		}
 	}
 }

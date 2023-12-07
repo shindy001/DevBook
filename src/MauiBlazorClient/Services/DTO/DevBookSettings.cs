@@ -1,20 +1,19 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace MauiBlazorClient.Services.DTO
+namespace MauiBlazorClient.Services.DTO;
+
+public sealed class DevBookSettings
 {
-	public sealed class DevBookSettings
-	{
-		public DashboardData DashboardData { get; init; } = new();
-	}
+	public DashboardData DashboardData { get; init; } = new();
+}
 
-	public sealed class DashboardData : ObservableObject
-	{
-		private string _selectedProfileId = string.Empty;
+public sealed class DashboardData : ObservableObject
+{
+	private string _selectedProfileId = string.Empty;
 
-		public string SelectedProfileId
-		{
-			get => _selectedProfileId;
-			set => SetProperty(ref _selectedProfileId, value);
-		}
+	public string SelectedProfileId
+	{
+		get => _selectedProfileId;
+		set => SetProperty(ref _selectedProfileId, value);
 	}
 }
