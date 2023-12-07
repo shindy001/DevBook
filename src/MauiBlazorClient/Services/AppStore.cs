@@ -1,4 +1,5 @@
 ﻿using MauiBlazorClient.Settings;
+using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using System.Text.Json;
 
@@ -9,19 +10,15 @@ public sealed class AppStore : IAppStore
 	private readonly string DataFile = "DevBook\\DevBookSettings.json";
 	private string DataPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), DataFile);
 	private readonly JsonSerializerOptions JsonSerializerOptions = new() { WriteIndented = true };
+	private readonly ILogger<AppStore> _logger;
 
 	public DevBookSettings DevBookSettings { get; private set; } = new();
 	public DashboardData DashboardData => DevBookSettings.DashboardData;
 
-	public void Initialize()
+	public AppStore(ILogger<AppStore> logger)
 	{
-		if (File.Exists(DataPath))
-		{
-			var file = File.ReadAllText(DataPath);
-			this.DevBookSettings = JsonSerializer.Deserialize<DevBookSettings>(file) ?? this.DevBookSettings;
-		}
-
-		this.DashboardData.PropertyChanged += async (s, a) => await OnDataChanged(s, a);
+		_logger = logger;
+		Initialize();
 	}
 
 	public async Task SaveData()
@@ -35,6 +32,17 @@ public sealed class AppStore : IAppStore
 		await File.WriteAllTextAsync(DataPath, json);
 	}
 
+	private void Initialize()
+	{
+		if (File.Exists(DataPath))
+		{
+			var file = File.ReadAllText(DataPath);
+			this.DevBookSettings = JsonSerializer.Deserialize<DevBookSettings>(file) ?? this.DevBookSettings;
+		}
+
+		this.DashboardData.PropertyChanged += async (s, a) => await OnDataChanged(s, a);
+	}
+
 	private async Task OnDataChanged(object? sender, PropertyChangedEventArgs e)
 	{
 		try
@@ -43,7 +51,8 @@ public sealed class AppStore : IAppStore
 		}
 		catch (Exception ex)
 		{
-			// Log error
+			_logger.LogError("Error while saving AppStore data: {ex}", ex);
+			throw;
 		}
 	}
 }

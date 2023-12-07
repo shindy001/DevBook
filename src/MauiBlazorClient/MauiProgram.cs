@@ -82,9 +82,6 @@ public static class MauiProgram
 		services.AddSingleton<IStartupProfilesService, StartupProfilesService>();
 		services.AddSingleton<IHackerNewsService, HackerNewsService>();
 
-		var appStore = new AppStore();
-		appStore.Initialize();
-
-		services.AddSingleton<IAppStore>(appStore);
+		services.AddSingleton<IAppStore, AppStore>();
 	}
 }
