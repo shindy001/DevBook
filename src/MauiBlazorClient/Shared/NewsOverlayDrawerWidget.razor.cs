@@ -6,7 +6,7 @@ namespace MauiBlazorClient.Shared;
 
 public partial class NewsOverlayDrawerWidget
 {
-	[Inject] private IExecutor Executor { get; set; } = default!;
+	[Inject] private IExecutor Executor { get; init; } = default!;
 
 	private Model _model = new();
 

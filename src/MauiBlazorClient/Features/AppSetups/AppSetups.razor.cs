@@ -9,9 +9,9 @@ namespace MauiBlazorClient.Features.AppSetups;
 
 public partial class AppSetups
 {
-	[Inject] private IExecutor Executor { get; set; } = default!;
-	[Inject] private IDialogService DialogService { get; set; } = default!;
-	[Inject] private IFilePickerService FilePickerService { get; set; } = default!;
+	[Inject] private IExecutor Executor { get; init; } = default!;
+	[Inject] private IDialogService DialogService { get; init; } = default!;
+	[Inject] private IFilePickerService FilePickerService { get; init; } = default!;
 
 	private Model _model = new();
 	private bool _loading;

@@ -6,8 +6,8 @@ namespace MauiBlazorClient.Features.Dashboard;
 
 public partial class StartupProfilesWidget
 {
-	[Inject] private IExecutor Executor { get; set; } = default!;
-	[Inject] private IAppStore AppStore { get; set; } = default!;
+	[Inject] private IExecutor Executor { get; init; } = default!;
+	[Inject] private IAppStore AppStore { get; init; } = default!;
 
 	private Model _model = new();
 	private Model.StartupProfileOption? _selectedOption;

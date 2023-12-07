@@ -9,7 +9,7 @@
 </MudDialog>
 
 @code {
-	[CascadingParameter] private MudDialogInstance _mudDialog { get; set; } = default!;
+	[CascadingParameter] private MudDialogInstance _mudDialog { get; init; } = default!;
 	[Parameter] public string ContentText { get; set; } = "Are you Sure?";
 	[Parameter] public string ButtonText { get; set; } = "Yes";
 

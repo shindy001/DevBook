@@ -9,8 +9,8 @@ namespace MauiBlazorClient.Features.StartupProfiles;
 
 public partial class StartupProfiles
 {
-	[Inject] private IExecutor Executor { get; set; } = default!;
-	[Inject] private IDialogService DialogService { get; set; } = default!;
+	[Inject] private IExecutor Executor { get; init; } = default!;
+	[Inject] private IDialogService DialogService { get; init; } = default!;
 
 	private Model _model = new();
 	private bool _loading;
