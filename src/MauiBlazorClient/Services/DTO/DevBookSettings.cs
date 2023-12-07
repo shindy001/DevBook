@@ -16,4 +16,12 @@ public sealed class DashboardData : ObservableObject
 		get => _selectedProfileId;
 		set => SetProperty(ref _selectedProfileId, value);
 	}
+
+	private bool _isDarkModeEnabled = false;
+
+	public bool IsDarkModeEnabled
+	{
+		get => _isDarkModeEnabled;
+		set => SetProperty(ref _isDarkModeEnabled, value);
+	}
 }

@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
 @* MudBlazor default components *@
-<MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" />
+<MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkModeEnabled" />
 <MudDialogProvider FullWidth="true" />
 <MudSnackbarProvider />
 
@@ -13,10 +13,10 @@
 		<MudSpacer />
 		<div>
 			<MudTooltip Delay="_tooltipDelayInMs" Text="Toggle Dark Mode" Placement="Placement.Bottom">
-				<MudIconButton Class='@(_isDarkMode ? "d-none" : "")' OnClick="ToggleTheme" Icon="@Icons.Material.Filled.DarkMode" Color="Color.Inherit" />
+				<MudIconButton Class='@(_isDarkModeEnabled ? "d-none" : "")' OnClick="ToggleTheme" Icon="@Icons.Material.Filled.DarkMode" Color="Color.Inherit" />
 			</MudTooltip>
 			<MudTooltip Delay="_tooltipDelayInMs" Text="Toggle Light Mode" Placement="Placement.Bottom">
-				<MudIconButton Class='@(_isDarkMode ? "" : "d-none")' OnClick="ToggleTheme" Icon="@Icons.Material.Filled.LightMode" Color="Color.Inherit" />
+				<MudIconButton Class='@(_isDarkModeEnabled ? "" : "d-none")' OnClick="ToggleTheme" Icon="@Icons.Material.Filled.LightMode" Color="Color.Inherit" />
 			</MudTooltip>
 			<MudTooltip Delay="_tooltipDelayInMs" Text="Hacker News" Placement="Placement.Bottom">
 				<MudIconButton Icon="@Icons.Material.Filled.Newspaper" OnClick="OpenNewsDrawer" Color="Color.Inherit" />
@@ -45,9 +45,10 @@
 </MudLayout>
 
 @code {
+	[Inject] private IAppStore AppStore { get; init; } = default!;
 	ErrorBoundary? _errorBoundary;
 	private bool _menuDrawerOpen = true;
-	private bool _isDarkMode;
+	private bool _isDarkModeEnabled;
 	private MudThemeProvider _mudThemeProvider = default!;
 	private NewsOverlayDrawerWidget _newsOverlayDrawerWidget = default!;
 	private double _tooltipDelayInMs = 600;
@@ -58,18 +59,19 @@
 		_errorBoundary?.Recover();
 	}
 
-	protected override async Task OnAfterRenderAsync(bool firstRender)
+	protected override void OnAfterRender(bool firstRender)
 	{
 		if (firstRender)
 		{
-			_isDarkMode = await _mudThemeProvider.GetSystemPreference();
+			_isDarkModeEnabled = AppStore.DashboardData.IsDarkModeEnabled;
 			StateHasChanged();
 		}
 	}
 
 	private void ToggleTheme()
 	{
-		_isDarkMode = !_isDarkMode;
+		_isDarkModeEnabled = !_isDarkModeEnabled;
+		AppStore.DashboardData.IsDarkModeEnabled = _isDarkModeEnabled;
 	}
 
 	private void MenuDrawerToggle()
