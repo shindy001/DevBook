@@ -3,6 +3,9 @@
 		<MudText Typo="Typo.h6">Hacker News</MudText>
 	</MudDrawerHeader>
 	<MudDrawerContainer>
+		<MudOverlay Class="bg-slate-500/[.03]" Visible="_loading" Absolute="true">
+           	<MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+        </MudOverlay>
 		<MudList Dense="true">
 			@foreach (var article in _model.NewsArticles.Select((value, index) => new { index, value }))
 			{

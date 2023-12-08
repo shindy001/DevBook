@@ -9,10 +9,13 @@ public partial class NewsOverlayDrawerWidget
 	[Inject] private IExecutor Executor { get; init; } = default!;
 
 	private Model _model = new();
+	private bool _loading = false;
 
 	protected override async Task OnInitializedAsync()
 	{
+		_loading = true;
 		_model = await Executor.ExecuteQuery(new GetModelQuery());
+		_loading = false;
 	}
 
 	public record Model
