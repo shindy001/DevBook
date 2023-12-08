@@ -21,7 +21,7 @@ Purpose of this repo is also to brush up on my rusty skills and to try new langu
 - [ ] Weather api integration ? 
 
 ## Dev Requirements
-- Visual studio
+- `Visual Studio` or `VSCode with C# Dev Kit, .NET MAUI extensions`
 - .net 8
 - MAUI Blazor Hybrid app Prerequisites - https://learn.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/maui?view=aspnetcore-8.0
 

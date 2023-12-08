@@ -2,7 +2,7 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "build",
+			"label": "build-server-task",
 			"command": "dotnet",
 			"type": "process",
 			"args": [
@@ -14,7 +14,7 @@
 			"problemMatcher": "$msCompile"
 		},
 		{
-			"label": "publish",
+			"label": "publish-server-task",
 			"command": "dotnet",
 			"type": "process",
 			"args": [
@@ -26,26 +26,30 @@
 			"problemMatcher": "$msCompile"
 		},
 		{
-			"label": "watch",
+			"label": "watch-server-task",
 			"command": "dotnet",
 			"type": "process",
 			"args": [
 				"watch",
 				"run",
 				"--project",
-				"${workspaceFolder}/src/DevBook.Server/DevBook.Server.csproj"
+				"${workspaceFolder}/src/DevBook.Server/DevBook.Server.csproj",
+				"--launch-profile",
+				"https"
 			],
 			"problemMatcher": "$msCompile"
 		},
 		{
-			"label": "start",
+			"label": "debug-server-task",
 			"command": "dotnet",
 			"type": "shell",
 			"isBackground": true,
 			"args": [
 				"run",
 				"--project",
-				"${workspaceFolder}/src/DevBook.Server/DevBook.Server.csproj"
+				"${workspaceFolder}/src/DevBook.Server/DevBook.Server.csproj",
+				"--launch-profile",
+				"https"
 			],
 			"problemMatcher": [
 				{
@@ -66,12 +70,20 @@
 			]
 		},
 		{
-			"label": "start server",
-			"dependsOn": ["start"]
+			"label": "build-and-debug-server-and-build-maui",
+			"dependsOn": ["build-server-and-maui", "debug-server-task"]
 		},
 		{
-			"label": "build and start server",
-			"dependsOn": ["build", "start"]
+			"label": "build-server-and-maui",
+			"dependsOn": ["build-server-task", "maui: Build"]
+		},
+		{
+			"label": "debug server",
+			"dependsOn": ["debug-server-task"]
+		},
+		{
+			"label": "build and debug server",
+			"dependsOn": ["build-server-task", "debug-server-task"]
 		},
 		{
 			"label": "terminate server",
@@ -85,7 +97,7 @@
 		  "id": "terminate server",
 		  "type": "command",
 		  "command": "workbench.action.tasks.terminate",
-		  "args": "start"
+		  "args": "debug-server-task"
 		}
 	  ]
 }
