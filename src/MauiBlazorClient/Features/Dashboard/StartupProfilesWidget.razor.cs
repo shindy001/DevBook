@@ -8,14 +8,17 @@ public partial class StartupProfilesWidget
 {
 	[Inject] private IExecutor Executor { get; init; } = default!;
 	[Inject] private IAppStore AppStore { get; init; } = default!;
+	private bool _loading = false;
 
 	private Model _model = new();
 	private Model.StartupProfileOption? _selectedOption;
 
 	protected override async Task OnInitializedAsync()
 	{
+		_loading = true;
 		_model = await Executor.ExecuteQuery(new GetModelQuery());
 		_selectedOption = _model.StartupProfileOptions.FirstOrDefault(x => x.Id.Equals(AppStore.DashboardData.SelectedProfileId));
+		_loading = false;
 	}
 
 	private async Task LaunchProfileApps()

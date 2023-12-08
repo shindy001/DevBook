@@ -1,15 +1,21 @@
-﻿<MudCard>
+﻿<MudCard Class="relative">
 	<MudCardHeader Class="py-2">
 		<CardHeaderContent>
 			<MudText Typo="Typo.h6">Startup Profiles</MudText>
 		</CardHeaderContent>
 	</MudCardHeader>
 	<MudCardContent Class="flex gap-1">
+		@if (_loading) {
+			<MudOverlay Class="bg-slate-900/[.40]" Visible="_loading" Absolute="true">
+            	<MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+        	</MudOverlay>
+		}
+		
 		<MudSelect Class="mt-0" T="Model.StartupProfileOption" Value="_selectedOption" ValueChanged="OnSelectedOptionChanged" Label="Startup Profile" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
-			@foreach(var startupProfileOption in _model.StartupProfileOptions)
-			{
-				<MudSelectItem Value="@startupProfileOption">@startupProfileOption.Name</MudSelectItem>
-			}
+		@foreach(var startupProfileOption in _model.StartupProfileOptions)
+		{
+			<MudSelectItem Value="@startupProfileOption">@startupProfileOption.Name</MudSelectItem>
+		}
 		</MudSelect>
 		<MudTooltip Delay="600" Text="Launch Profile Apps" Placement="Placement.Top">
 			<MudIconButton
