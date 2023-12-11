@@ -1,6 +1,6 @@
 using DevBook.Grpc.AppSetups;
 
-namespace MauiBlazorClient.Services;
+namespace MauiBlazorClient.Services.Contracts;
 
 public interface IAppSetupsService
 {

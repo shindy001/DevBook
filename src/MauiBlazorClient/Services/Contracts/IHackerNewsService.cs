@@ -1,6 +1,6 @@
 ﻿using DevBook.Grpc.HackerNews;
 
-namespace MauiBlazorClient.Services;
+namespace MauiBlazorClient.Services.Contracts;
 
 public interface IHackerNewsService
 {

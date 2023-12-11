@@ -1,6 +1,6 @@
 ﻿using MauiBlazorClient.Settings;
 
-namespace MauiBlazorClient.Services;
+namespace MauiBlazorClient.Services.Contracts;
 
 public interface IAppStore
 {

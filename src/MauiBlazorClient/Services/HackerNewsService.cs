@@ -1,4 +1,5 @@
 using DevBook.Grpc.HackerNews;
+using MauiBlazorClient.Services.Contracts;
 
 namespace MauiBlazorClient.Services;
 

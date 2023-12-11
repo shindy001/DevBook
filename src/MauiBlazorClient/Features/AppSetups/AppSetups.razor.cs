@@ -1,5 +1,6 @@
 ﻿using DevBook.Shared.Contracts;
 using MauiBlazorClient.Services;
+using MauiBlazorClient.Services.Contracts;
 using MauiBlazorClient.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;

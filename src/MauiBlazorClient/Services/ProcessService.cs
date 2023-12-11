@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using MauiBlazorClient.Services.Contracts;
+using System.Diagnostics;
 
 namespace MauiBlazorClient.Services;
 

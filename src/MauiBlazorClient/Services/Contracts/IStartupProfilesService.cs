@@ -1,6 +1,6 @@
 using DevBook.Grpc.StartupProfiles;
 
-namespace MauiBlazorClient.Services;
+namespace MauiBlazorClient.Services.Contracts;
 
 public interface IStartupProfilesService
 {

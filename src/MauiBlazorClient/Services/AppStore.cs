@@ -1,4 +1,5 @@
-﻿using MauiBlazorClient.Settings;
+﻿using MauiBlazorClient.Services.Contracts;
+using MauiBlazorClient.Settings;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using System.Text.Json;

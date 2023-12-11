@@ -1,4 +1,4 @@
-﻿namespace MauiBlazorClient.Services;
+﻿namespace MauiBlazorClient.Services.Contracts;
 
 public interface IProcessService
 {

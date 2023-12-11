@@ -1,4 +1,5 @@
 using DevBook.Grpc.AppSetups;
+using MauiBlazorClient.Services.Contracts;
 
 namespace MauiBlazorClient.Services;
 

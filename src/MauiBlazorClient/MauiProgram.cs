@@ -3,6 +3,7 @@ using DevBook.Grpc.HackerNews;
 using DevBook.Grpc.StartupProfiles;
 using DevBook.Shared;
 using MauiBlazorClient.Services;
+using MauiBlazorClient.Services.Contracts;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 using Microsoft.Maui.Platform;

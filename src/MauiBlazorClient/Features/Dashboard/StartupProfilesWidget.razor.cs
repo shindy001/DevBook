@@ -1,5 +1,5 @@
 ﻿using DevBook.Shared.Contracts;
-using MauiBlazorClient.Services;
+using MauiBlazorClient.Services.Contracts;
 using Microsoft.AspNetCore.Components;
 
 namespace MauiBlazorClient.Features.Dashboard;
