@@ -3,8 +3,13 @@
 <MudDialog DefaultFocus="DefaultFocus.FirstChild" @bind-IsVisible="_isCreateOrUpdateDialogVisible" Options="_dialogOptions">
 	<DialogContent>
 		<MudForm @ref="_createOrUpdateForm" @bind-IsValid="_isValidCreateOrUpdateForm" @onkeypress="SubmitOnEnterPress">
-			<MudTextField @bind-Value="_formNameField" Required="true" Immediate="true" Label="Name" />
-			<MudSelect T="StartupProfiles.Model.AvailableAppSetup" Label="App Setups" MultiSelection="true" @bind-SelectedValues="_selectedAppSetups">
+			<MudTextField @bind-Value="EditModel.Name" Required="true" Immediate="true" Label="Name" />
+			<MudSelect
+				T="Model.AvailableAppSetup"
+				Label="App Setups"
+				MultiSelection="true"
+				SelectedValuesChanged="(x) => EditModel.AppSetupIds = x.Select(x => x.Id)">
+				
 				@foreach (var appSetup in _model.AvailableAppSetups)
 				{
 					<MudSelectItem Value="@appSetup">@appSetup.Name</MudSelectItem>
@@ -14,7 +19,7 @@
 	</DialogContent>
 	<DialogActions>
 		<MudButton OnClick="CancelCreateOrUpdateDialog">Cancel</MudButton>
-		<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitCreateOrUpdate">@(_formIdField is null ? "Create" : "Update")</MudButton>
+		<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitCreateOrUpdate">@(EditModel.Id is null ? "Create" : "Update")</MudButton>
 	</DialogActions>
 </MudDialog>
 

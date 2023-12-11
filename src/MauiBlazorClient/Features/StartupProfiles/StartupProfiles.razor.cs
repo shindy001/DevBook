@@ -19,9 +19,8 @@ public partial class StartupProfiles
 	private MudForm _createOrUpdateForm = default!;
 	private bool _isValidCreateOrUpdateForm;
 	private bool _isCreateOrUpdateDialogVisible;
-	private string? _formIdField;
-	private string _formNameField = string.Empty;
-	private IEnumerable<Model.AvailableAppSetup> _selectedAppSetups = [];
+
+	private readonly Model.StartupProfile EditModel = new();
 
 	protected override async Task OnInitializedAsync() => await LoadData();
 
@@ -33,24 +32,17 @@ public partial class StartupProfiles
 		_loading = false;
 	}
 
-	private void ResetCreateOrUpdateDialogData()
-	{
-		_formIdField = null;
-		_formNameField = string.Empty;
-		_selectedAppSetups = [];
-	}
-
 	private void OpenCreateDialog()
 	{
-		ResetCreateOrUpdateDialogData();
+		EditModel.Reset();
 		_isCreateOrUpdateDialogVisible = true;
 	}
 
 	private void OpenEditDialog(Model.StartupProfile startupProfile)
 	{
-		_formIdField = startupProfile.Id;
-		_formNameField = startupProfile.Name;
-		_selectedAppSetups = _model.AvailableAppSetups.Where(x => startupProfile?.AppSetupIds.Contains(x.Id) == true) ?? [];
+		EditModel.Id = startupProfile.Id;
+		EditModel.Name = startupProfile.Name;
+		EditModel.AppSetupIds = _model.AvailableAppSetups.Select(x => x.Id).Where(id => startupProfile?.AppSetupIds.Contains(id) == true) ?? [];
 		_isCreateOrUpdateDialogVisible = true;
 	}
 
@@ -67,10 +59,17 @@ public partial class StartupProfiles
 		await _createOrUpdateForm.Validate();
 		if (_isValidCreateOrUpdateForm)
 		{
-			await Executor.ExecuteCommand(new CreateOrUpdateCommand { Id = _formIdField, Name = _formNameField, AppSetupIds = _selectedAppSetups.Select(x => x.Id).ToList() });
+			await Executor.ExecuteCommand(
+				new CreateOrUpdateCommand
+				{
+					Id = EditModel.Id,
+					Name = EditModel.Name,
+					AppSetupIds = EditModel.AppSetupIds.ToList()
+				});
+
 			await LoadData();
 			_isCreateOrUpdateDialogVisible = false;
-			ResetCreateOrUpdateDialogData();
+			EditModel.Reset();
 		}
 	}
 
@@ -91,7 +90,7 @@ public partial class StartupProfiles
 	private void CancelCreateOrUpdateDialog()
 	{
 		_isCreateOrUpdateDialogVisible = false;
-		ResetCreateOrUpdateDialogData();
+		EditModel.Reset();
 	}
 
 	public class GetModelQuery : IQuery<Model> { }
@@ -110,7 +109,20 @@ public partial class StartupProfiles
 		public List<StartupProfile> StartupProfiles { get; set; } = [];
 		public List<AvailableAppSetup> AvailableAppSetups { get; set; } = [];
 
-		public record StartupProfile(string Id, string Name, IEnumerable<string> AppSetupIds);
+		public record StartupProfile
+		{
+			public string Id { get; set; } = string.Empty;
+			public string Name { get; set; } = string.Empty;
+			public IEnumerable<string> AppSetupIds { get; set; } = Enumerable.Empty<string>();
+
+			public void Reset()
+			{
+				Id = string.Empty;
+				Name = string.Empty;
+				AppSetupIds = Enumerable.Empty<string>();
+			}
+		}
+
 		public record AvailableAppSetup(string Id, string Name)
 		{
 			public override string ToString() => Name;
@@ -131,7 +143,13 @@ public partial class StartupProfiles
 			foreach (var startuProfileDto in startupProfileDtos)
 			{
 				var appSetupNames = (await _appSetupsService.GetByIds([.. startuProfileDto.AppSetupIds])).Select(x => x.Name);
-				model.StartupProfiles.Add(new Model.StartupProfile(startuProfileDto.Id, startuProfileDto.Name, appSetupNames));
+				model.StartupProfiles.Add(
+					new Model.StartupProfile
+					{
+						Id = startuProfileDto.Id,
+						Name = startuProfileDto.Name,
+						AppSetupIds = appSetupNames
+					});
 			}
 			return model;
 		}
