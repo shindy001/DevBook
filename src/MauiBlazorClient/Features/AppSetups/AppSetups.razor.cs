@@ -21,10 +21,8 @@ public partial class AppSetups
 	private MudForm _createOrUpdateForm = default!;
 	private bool _isValidCreateOrUpdateForm;
 	private bool _isCreateOrUpdateDialogVisible;
-	private string? _formIdField = null;
-	private string _formNameField = string.Empty;
-	private string _formPathField = string.Empty;
-	private string? _formArgumentsField = null;
+
+	private readonly Model.AppSetup EditModel = new();
 
 	protected override async Task OnInitializedAsync() => await LoadData();
 
@@ -36,26 +34,18 @@ public partial class AppSetups
 		_loading = false;
 	}
 
-	private void ResetCreateOrUpdateDialogData()
-	{
-		_formIdField = null;
-		_formNameField = string.Empty;
-		_formPathField = string.Empty;
-		_formArgumentsField = null;
-	}
-
 	private void OpenCreateDialog()
 	{
-		ResetCreateOrUpdateDialogData();
+		EditModel.Reset();
 		_isCreateOrUpdateDialogVisible = true;
 	}
 
 	private void OpenEditDialog(Model.AppSetup appSetup)
 	{
-		_formIdField = appSetup.Id;
-		_formNameField = appSetup.Name;
-		_formPathField = appSetup.Path;
-		_formArgumentsField = appSetup.Arguments;
+		EditModel.Id = appSetup.Id;
+		EditModel.Name = appSetup.Name;
+		EditModel.Path = appSetup.Path;
+		EditModel.Arguments = appSetup.Arguments;
 		_isCreateOrUpdateDialogVisible = true;
 	}
 
@@ -72,10 +62,17 @@ public partial class AppSetups
 		await _createOrUpdateForm.Validate();
 		if (_isValidCreateOrUpdateForm)
 		{
-			await Executor.ExecuteCommand(new CreateOrUpdateCommand { Id = _formIdField, Name = _formNameField, Path = _formPathField, Arguments = _formArgumentsField });
+			await Executor.ExecuteCommand(
+				new CreateOrUpdateCommand 
+				{ 
+					Id = EditModel.Id,
+					Name = EditModel.Name,
+					Path = EditModel.Path, Arguments = EditModel.Arguments
+				});
+
 			await LoadData();
 			_isCreateOrUpdateDialogVisible = false;
-			ResetCreateOrUpdateDialogData();
+			EditModel.Reset();
 		}
 	}
 
@@ -96,7 +93,7 @@ public partial class AppSetups
 	private void CancelCreateOrUpdateDialog()
 	{
 		_isCreateOrUpdateDialogVisible = false;
-		ResetCreateOrUpdateDialogData();
+		EditModel.Reset();
 	}
 
 	private async Task PickPath()
@@ -104,7 +101,7 @@ public partial class AppSetups
 		var (success, path) = await FilePickerService.PickOneAsync();
 		if (success)
 		{
-			_formPathField = path;
+			EditModel.Path = path;
 		}
 	}
 
@@ -112,7 +109,21 @@ public partial class AppSetups
 	{
 		public List<AppSetup> AppSetups { get; set; } = [];
 
-		public record AppSetup(string Id, string Name, string Path, string? Arguments);
+		public record AppSetup
+		{
+			public string? Id { get; set; }
+			public string Name { get; set; } = string.Empty;
+			public string Path { get; set; } = string.Empty;
+			public string? Arguments { get; set; }
+
+			public void Reset()
+			{
+				Id = null;
+				Name = string.Empty;
+				Path = string.Empty;
+				Arguments = null;
+			}
+		}
 	}
 
 	public record GetModelQuery : IQuery<Model> { }
@@ -132,7 +143,9 @@ public partial class AppSetups
 		public async Task<Model> Handle(GetModelQuery request, CancellationToken cancellationToken)
 		{
 			var appSetupDtos = await _appSetupsService.GetAll();
-			return new Model { AppSetups = appSetupDtos.Select(x => new Model.AppSetup(x.Id, x.Name, x.Path, x.Arguments)).ToList() };
+			return new Model { AppSetups = appSetupDtos.Select(
+				x => new Model.AppSetup { Id = x.Id, Name = x.Name, Path = x.Path, Arguments = x.Arguments })
+				.ToList() };
 		}
 	}
 
